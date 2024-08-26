@@ -6,15 +6,28 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
 @Data
 public class User {
+
+    public User() {
+    }
+
+    public User(Long id, String username, String password, String email, String name, String surname, String home_address, String phone_number, String role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.name = name;
+        this.surname = surname;
+        this.home_address = home_address;
+        this.phone_number = phone_number;
+        this.role = role;
+
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,15 +39,15 @@ public class User {
     @Column
     private String email;
     @Column
-    private String rol;
-    @Column
     private String name;
     @Column
     private String surname;
     @Column
     private String home_address;
     @Column
-    private int phone_number;
+    private String phone_number;
+    @Column 
+    private String role;
 
     //poner relacion de uno a mucho con ordenCompra
     @OneToMany (mappedBy = "user")
@@ -42,9 +55,14 @@ public class User {
 
     @OneToMany (mappedBy = "user")
     private List<ShopCart> carrito;
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
     
 
-    @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Rol> roles;
 }
