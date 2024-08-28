@@ -15,6 +15,7 @@ import com.uade.tpo.cars_e_commerce.entity.User;
 import com.uade.tpo.cars_e_commerce.entity.dto.UserRequest;
 import com.uade.tpo.cars_e_commerce.exceptions.UserDuplicateException;
 import com.uade.tpo.cars_e_commerce.exceptions.UserWrongPasswordException;
+import com.uade.tpo.cars_e_commerce.exceptions.UserWrongUsernameExcpetion;
 import com.uade.tpo.cars_e_commerce.service.UserService;
 
 
@@ -47,11 +48,11 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<Object> loginUser(@RequestBody UserRequest userRequest) throws UserWrongPasswordException, UserDuplicateException {
+    public ResponseEntity<Object> loginUser(@RequestBody UserRequest userRequest) throws UserWrongPasswordException, UserWrongUsernameExcpetion {
         if (userService.loginUser(userRequest.getUsername(), userRequest.getPassword())) {
             return ResponseEntity.ok().build();
         } else if (userService.findByUsername(userRequest.getUsername()) == null) {
-            throw new UserDuplicateException();
+            throw new UserWrongUsernameExcpetion();
         } else {
             throw new UserWrongPasswordException();
         }
