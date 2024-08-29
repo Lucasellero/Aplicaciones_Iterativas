@@ -1,5 +1,7 @@
 package com.uade.tpo.cars_e_commerce.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +22,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsernameCustomQuery(username);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     @Override
@@ -31,8 +33,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean loginUser(String username, String password) {
-        User user = userRepository.findByUsernameCustomQuery(username);
-        return user != null && user.getPassword().equals(password);
+        Optional<User> user = userRepository.findByEmail(username);
+        if (user.isPresent()) {
+            return user.get().getPassword().equals(password);
+        }
+        return false;
     }
 
      
