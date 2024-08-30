@@ -14,14 +14,16 @@ public class ShopCartLine {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ShopCartLineid;
+    @Column(name = "id_shop_cart_line")
+    private Long shopCartLineid;
 
+    @Column(name = "cart_identifier")
     private Long cartIdentifier;
 
     @Column
     private Integer quantity;
 
-    @Column
+    @Column (name = "line_price")
     private Double linePrice;
 
     @ManyToOne

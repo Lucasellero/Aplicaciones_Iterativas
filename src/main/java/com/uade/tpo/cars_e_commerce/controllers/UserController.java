@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uade.tpo.cars_e_commerce.controllers.auth.UserRequest;
 import com.uade.tpo.cars_e_commerce.entity.User;
-import com.uade.tpo.cars_e_commerce.entity.dto.UserRequest;
 import com.uade.tpo.cars_e_commerce.exceptions.UserDuplicateException;
 import com.uade.tpo.cars_e_commerce.exceptions.UserWrongPasswordException;
+import com.uade.tpo.cars_e_commerce.exceptions.UserWrongUsernameExcpetion;
 import com.uade.tpo.cars_e_commerce.service.UserService;
 
 
@@ -28,17 +29,16 @@ public class UserController {
 
     @PostMapping("/register")
    public ResponseEntity<Object> registerUser(@RequestBody UserRequest userRequest) throws UserDuplicateException {
-    if (userService.findByUsername(userRequest.getUsername()) != null) {
+    if (userService.findByEmail(userRequest.getEmail()) != null) {
         throw new UserDuplicateException();
     }
         User user = new User();
-        user.setUsername(userRequest.getUsername());
-        user.setPassword(userRequest.getPassword());
-        user.setEmail(userRequest.getEmail());
         user.setName(userRequest.getName());
         user.setSurname(userRequest.getSurname());
         user.setPhone_number(userRequest.getPhone_number());
         user.setHome_address(userRequest.getHome_address());
+        user.setEmail(userRequest.getEmail());
+        user.setPassword(userRequest.getPassword());
         User result = userService.registerUser(user);
         return ResponseEntity.created(URI.create("/users/" + result.getId())).body(result);
        
@@ -47,19 +47,19 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<Object> loginUser(@RequestBody UserRequest userRequest) throws UserWrongPasswordException, UserDuplicateException {
-        if (userService.loginUser(userRequest.getUsername(), userRequest.getPassword())) {
+    public ResponseEntity<Object> loginUser(@RequestBody UserRequest userRequest) throws UserWrongPasswordException, UserWrongUsernameExcpetion {
+        if (userService.loginUser(userRequest.getEmail(), userRequest.getPassword())) {
             return ResponseEntity.ok().build();
-        } else if (userService.findByUsername(userRequest.getUsername()) == null) {
-            throw new UserDuplicateException();
+        } else if (userService.findByEmail(userRequest.getEmail()) == null) {
+            throw new UserWrongUsernameExcpetion();
         } else {
             throw new UserWrongPasswordException();
         }
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<User> getUser(@RequestParam String username) {
-        User user = userService.findByUsername(username);
+    @GetMapping("/email")
+    public ResponseEntity<User> getUser(@RequestParam String email) {
+        User user = userService.findByEmail(email);
         return ResponseEntity.ok(user);
     }
 
