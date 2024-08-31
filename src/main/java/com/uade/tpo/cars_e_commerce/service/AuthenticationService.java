@@ -33,7 +33,7 @@ public class AuthenticationService {
                                 .surname(request.getSurname())
                                 .phone_number(request.getPhone_number())
                                 .home_address(request.getHome_address())
-                                .role(Role.USER)
+                                .role(request.getRole())
                                 .build();
                 repository.save(user);
                 var jwtToken = jwtService.generateToken(user);

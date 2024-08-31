@@ -1,5 +1,7 @@
 package com.uade.tpo.cars_e_commerce.controllers.auth;
 
+import com.uade.tpo.cars_e_commerce.entity.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +19,5 @@ public class UserRequest {
     private String surname;
     private String home_address;
     private String phone_number; //Cuidado con el tipo de dato
-    private String role;
+    private Role role;
 }
