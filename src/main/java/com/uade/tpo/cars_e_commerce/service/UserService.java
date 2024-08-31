@@ -8,8 +8,7 @@ import com.uade.tpo.cars_e_commerce.exceptions.UserDuplicateException;
 public interface UserService {
     public User registerUser(User user) throws UserDuplicateException;
     public boolean loginUser(String username, String password);
-    public User findByUsername(String username);
+    public User findByEmail(String email);
     public Iterable<User> findAll();
-    
-    
+    public User findByUsername(String username);
 }

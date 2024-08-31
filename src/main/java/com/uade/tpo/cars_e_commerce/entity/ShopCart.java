@@ -1,6 +1,8 @@
 package com.uade.tpo.cars_e_commerce.entity;
 import java.util.List;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,9 +11,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class ShopCart {
 
@@ -20,12 +28,34 @@ public class ShopCart {
         private Long shopCartid;
 
         @Column
-        private Double total;
+        private Double totalAmount = Double.valueOf(0);
 
         @OneToOne
         @JoinColumn(name = "user_id", nullable = false)
         private User user;
 
-        @OneToMany(mappedBy = "shopCart")
-        private List<ShopCartLine> shopCartLine;
+        @OneToMany(mappedBy = "shopCart", cascade = CascadeType.ALL, orphanRemoval = true)
+        private Set<ShopCartLine> shopCartLine;
+
+        public void addItem(ShopCartLine shopCartLine) {
+                this.shopCartLine.add(shopCartLine);
+                shopCartLine.setShopCart(this);
+                updateTotalAmount();
+        }
+
+        public void removeItem(ShopCartLine shopCartLine) {
+                this.shopCartLine.remove(shopCartLine);
+                shopCartLine.setShopCart(null);
+                updateTotalAmount();
+        }
+
+        public void updateTotalAmount() {
+                this.totalAmount = shopCartLine.stream().map( item -> {
+                        Double unitPrice = item.getUnitPrice();
+                        if (unitPrice == null) {
+                                return 0.0;
+                        }
+                        return unitPrice * item.getQuantity();
+                }).reduce(0.0, (a, b) -> a + b);
+        }
 }

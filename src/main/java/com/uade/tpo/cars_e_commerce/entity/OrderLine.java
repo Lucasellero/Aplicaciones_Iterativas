@@ -32,6 +32,6 @@ public class OrderLine {
 
     @ManyToOne
     @JoinColumn(name = "car_id", nullable = false)
-    private Cars car;
+    private Car car;
 }
 

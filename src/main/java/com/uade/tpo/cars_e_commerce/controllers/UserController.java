@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uade.tpo.cars_e_commerce.controllers.auth.UserRequest;
 import com.uade.tpo.cars_e_commerce.entity.User;
-import com.uade.tpo.cars_e_commerce.entity.dto.UserRequest;
 import com.uade.tpo.cars_e_commerce.exceptions.UserDuplicateException;
 import com.uade.tpo.cars_e_commerce.exceptions.UserWrongPasswordException;
 import com.uade.tpo.cars_e_commerce.service.UserService;
@@ -43,7 +43,6 @@ public class UserController {
         return ResponseEntity.created(URI.create("/users/" + result.getId())).body(result);
        
     }
-
 
 
     @PostMapping("/login")
