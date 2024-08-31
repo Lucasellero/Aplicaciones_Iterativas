@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.uade.tpo.cars_e_commerce.entity.Car;
+import com.uade.tpo.cars_e_commerce.entity.Cars;
 import com.uade.tpo.cars_e_commerce.entity.ShopCart;
 import com.uade.tpo.cars_e_commerce.entity.ShopCartLine;
 import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
@@ -30,7 +30,7 @@ public class ShopCartLineServiceImpl implements ShopCartLineService {
     @Override
     public void addItemToCart(Long cartId, Long productId, Long quantity) {
         ShopCart cart = shopCartService.getCart(cartId);
-        Car car = carService.getCarById(productId).orElseThrow(() -> new ResourceNotFoundException("car not found"));
+        Cars car = carService.getCarById(productId).orElseThrow(() -> new ResourceNotFoundException("car not found"));
         ShopCartLine cartItem = cart.getShopCartLine()
                                 .stream()
                                 .filter(item -> item.getCar().getCarId().equals(productId))

@@ -3,7 +3,6 @@ package com.uade.tpo.cars_e_commerce.controllers.auth;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.cars_e_commerce.controllers.config.JwtService;
+import com.uade.tpo.cars_e_commerce.entity.User;
 import com.uade.tpo.cars_e_commerce.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,17 +38,16 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
     @GetMapping("/users")
-    public ResponseEntity<UserDetails> getUserDetails(@RequestHeader(HttpHeaders.AUTHORIZATION) String autHeader) {
+    public ResponseEntity<User> getUserDetails(@RequestHeader(HttpHeaders.AUTHORIZATION) String autHeader) {
         String token = extractToken(autHeader);
         if (token != null && jwtService.isTokenValid(token, userDetailsService.loadUserByUsername(jwtService.extractUsername(token)))) {
             String username = jwtService.extractUsername(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            return ResponseEntity.ok(userDetails);    
+            User user = service.findUserByUsername(username); 
+            return ResponseEntity.ok(user);    
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-    
     private String extractToken(String authHeader) {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);

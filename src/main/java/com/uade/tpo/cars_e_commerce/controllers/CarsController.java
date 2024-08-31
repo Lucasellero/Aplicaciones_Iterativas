@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.uade.tpo.cars_e_commerce.entity.Car;
+import com.uade.tpo.cars_e_commerce.entity.Cars;
 import com.uade.tpo.cars_e_commerce.entity.dto.CarRequest;
 import com.uade.tpo.cars_e_commerce.exceptions.CarDuplicateException;
 import com.uade.tpo.cars_e_commerce.exceptions.CarNotFoundException;
@@ -33,14 +33,14 @@ public class CarsController {
     @PostMapping
     public ResponseEntity<Object> createCar(@RequestBody CarRequest carRequest) throws CarDuplicateException {
         try{
-            Car car = new Car();
+            Cars car = new Cars();
             car.setManufacturer(carRequest.getManufacturer());
             car.setModelName(carRequest.getModelName());
             car.setModelYear(carRequest.getModelYear());
             car.setColor(carRequest.getColor());
             car.setPrice(carRequest.getPrice());
             car.setStock(carRequest.getStock());
-            Car result = carService.createCar(car);
+            Cars result = carService.createCar(car);
             URI location = URI.create("/cars/" + result.getCarId());
             return ResponseEntity.created(location).body(result);
         }catch (CarDuplicateException e){
@@ -49,7 +49,7 @@ public class CarsController {
     }
     
 @GetMapping
-    public ResponseEntity<Page<Car>> getCars(
+    public ResponseEntity<Page<Cars>> getCars(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
         if (page == null || size == null)
@@ -58,24 +58,24 @@ public class CarsController {
     }
 
     @GetMapping("/manufacturer/{manufacturer}")
-    public ResponseEntity<List<Car>> getCarByManufacturer(@PathVariable String manufacturer) throws CarNotFoundException {
-        List<Car> result = carService.getCarByManufacturer(manufacturer);
+    public ResponseEntity<List<Cars>> getCarByManufacturer(@PathVariable String manufacturer) throws CarNotFoundException {
+        List<Cars> result = carService.getCarByManufacturer(manufacturer);
         if (result.isEmpty())
             return ResponseEntity.noContent().build();
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/price/{price}")
-    public ResponseEntity<List<Car>> getCarByPrice(@PathVariable Double price) throws CarNotFoundException {
-        List<Car> result = carService.getCarByPrice(price);
+    public ResponseEntity<List<Cars>> getCarByPrice(@PathVariable Double price) throws CarNotFoundException {
+        List<Cars> result = carService.getCarByPrice(price);
         if (result.isEmpty())
             return ResponseEntity.noContent().build();
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/price-range/{price_min}/{price_max}")
-    public ResponseEntity<List<Car>> getCarByPriceRange(@PathVariable Double price_min, @PathVariable Double price_max) throws CarNotFoundException {
-        List<Car> result = carService.getCarByPriceRange(price_min, price_max);
+    public ResponseEntity<List<Cars>> getCarByPriceRange(@PathVariable Double price_min, @PathVariable Double price_max) throws CarNotFoundException {
+        List<Cars> result = carService.getCarByPriceRange(price_min, price_max);
         if (result.isEmpty())
             return ResponseEntity.noContent().build();
         return ResponseEntity.ok(result);
@@ -83,24 +83,24 @@ public class CarsController {
     
 
     @GetMapping("/color/{color}")
-    public ResponseEntity<List<Car>> getCarByColor(@PathVariable String color) throws CarNotFoundException {
-        List<Car> result = carService.getCarByColor(color);
+    public ResponseEntity<List<Cars>> getCarByColor(@PathVariable String color) throws CarNotFoundException {
+        List<Cars> result = carService.getCarByColor(color);
         if (result.isEmpty())
             return ResponseEntity.noContent().build();
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/model/{modelName}")
-    public ResponseEntity<List<Car>> getCarByModelName(@PathVariable String modelName) throws CarNotFoundException {
-        List<Car> result = carService.getCarByModelName(modelName);
+    public ResponseEntity<List<Cars>> getCarByModelName(@PathVariable String modelName) throws CarNotFoundException {
+        List<Cars> result = carService.getCarByModelName(modelName);
         if (result.isEmpty())
             return ResponseEntity.noContent().build();
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/year/{model_year}")
-    public ResponseEntity<List<Car>> getCarByModelYear(@PathVariable int modelYear) throws CarNotFoundException {
-        List<Car> result = carService.getCarByModelYear(modelYear);
+    public ResponseEntity<List<Cars>> getCarByModelYear(@PathVariable int modelYear) throws CarNotFoundException {
+        List<Cars> result = carService.getCarByModelYear(modelYear);
         if (result.isEmpty())
             return ResponseEntity.noContent().build();
         return ResponseEntity.ok(result);

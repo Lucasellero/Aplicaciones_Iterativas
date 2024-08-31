@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.uade.tpo.cars_e_commerce.entity.Car;
+import com.uade.tpo.cars_e_commerce.entity.Cars;
 import com.uade.tpo.cars_e_commerce.exceptions.CarDuplicateException;
 import com.uade.tpo.cars_e_commerce.exceptions.CarNotFoundException;
 import com.uade.tpo.cars_e_commerce.repository.CarRepository;
@@ -20,17 +20,17 @@ public class CarServiceImpl implements CarService {
     private CarRepository carRepository;
 
     @Override
-    public Page<Car> getCars(PageRequest pageRequest) {
+    public Page<Cars> getCars(PageRequest pageRequest) {
         return carRepository.findAll(pageRequest);
     }
 
     @Override
-    public Optional<Car> getCarById(Long carId) {
+    public Optional<Cars> getCarById(Long carId) {
         return carRepository.findById(carId);
     }
 
     @Override
-    public Car createCar(Car car) throws CarDuplicateException {
+    public Cars createCar(Cars car) throws CarDuplicateException {
         boolean exists = carRepository.existsByManufacturerAndModelNameAndModelYear(
                 car.getManufacturer(),
                 car.getModelName(),
@@ -43,37 +43,37 @@ public class CarServiceImpl implements CarService {
         return carRepository.save(car);
     }
 
-    public List<Car> getAllCars() {
+    public List<Cars> getAllCars() {
         return carRepository.findAll(); 
     }
 
     @Override
-    public List<Car> getCarByManufacturer(String manufacturer) throws CarNotFoundException {
+    public List<Cars> getCarByManufacturer(String manufacturer) throws CarNotFoundException {
         return carRepository.findByManufacturer(manufacturer);
     }
 
     @Override
-    public List<Car> getCarByPrice(Double price) throws CarNotFoundException {
+    public List<Cars> getCarByPrice(Double price) throws CarNotFoundException {
         return carRepository.findByPrice(price);
     }
 
     @Override
-    public List<Car> getCarByPriceRange(Double price_min,Double price_max) throws CarNotFoundException {
+    public List<Cars> getCarByPriceRange(Double price_min,Double price_max) throws CarNotFoundException {
         return carRepository.findByRangePrice(price_min, price_max);
     }
 
     @Override
-    public List<Car> getCarByColor(String color) throws CarNotFoundException{
+    public List<Cars> getCarByColor(String color) throws CarNotFoundException{
         return carRepository.findByColor(color);
     }
 
     @Override
-    public List<Car> getCarByModelName(String modelName) throws CarNotFoundException{
+    public List<Cars> getCarByModelName(String modelName) throws CarNotFoundException{
         return carRepository.findByModelName(modelName);
     }
 
     @Override
-    public List<Car> getCarByModelYear(int modelYear) throws CarNotFoundException{
+    public List<Cars> getCarByModelYear(int modelYear) throws CarNotFoundException{
         return carRepository.findByModelYear(modelYear);
     }
 }

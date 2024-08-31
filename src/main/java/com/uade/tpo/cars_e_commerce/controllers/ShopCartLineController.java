@@ -5,12 +5,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.uade.tpo.cars_e_commerce.entity.ShopCartLine;
 import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
 import com.uade.tpo.cars_e_commerce.service.ShopCartLineService;
 import com.uade.tpo.cars_e_commerce.service.ShopCartService;
@@ -46,12 +44,13 @@ public class ShopCartLineController {
             return ResponseEntity.notFound().build();
         }
     }
-
+/* 
     @PutMapping("/cart/{cartId}/item/{itemId}/update")
     public String putMethodName(@PathVariable String id, @RequestBody String entity) {
         return entity;
     }
-
+        */ //no hace falta
+    @PutMapping("/cart/{cartId}/item/{itemId}/update")
     public ResponseEntity<Object> updateItemQuantity(@PathVariable Long cartId, @PathVariable Long itemId, @RequestParam Long quantity) {
         try {
             shopCartLineService.updateItemQuantity(cartId, itemId, quantity);

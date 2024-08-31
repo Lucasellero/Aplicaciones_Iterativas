@@ -14,7 +14,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Car {
+public class Cars{
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)

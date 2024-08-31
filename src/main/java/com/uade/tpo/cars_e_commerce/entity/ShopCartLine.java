@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class ShopCartLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ShopCartLineid;
+    private Long shopCartLineid;
 
     @Column
     private Long quantity;
@@ -35,7 +35,7 @@ public class ShopCartLine {
 
     @ManyToOne
     @JoinColumn(name = "car_id", nullable = false)
-    private Car car;
+    private Cars car;
     
     public void setTotalPrice() {
         this.totalPrice = this.quantity * this.unitPrice;

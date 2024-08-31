@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,6 +28,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class User implements UserDetails {
+
+    public User(Long id , String email, String password, String name, String surname, String home_address, String phone_number, Role role) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.home_address = home_address;
+        this.phone_number = phone_number;
+        this.role = role;
+    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

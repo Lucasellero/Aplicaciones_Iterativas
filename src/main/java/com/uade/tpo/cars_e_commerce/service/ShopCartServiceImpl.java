@@ -37,7 +37,7 @@ public class ShopCartServiceImpl implements ShopCartService {
     @Override
     public ShopCart clearCart(Long id) {
         ShopCart cart = getCart(id);
-        shopCartLineRepository.deleteAllByCartId(id);
+        shopCartLineRepository.deleteAllByShopCart_ShopCartid(id);
         cart.getShopCartLine().clear(); // Limpia las lineas del carrito.
         shopCartRepository.deleteById(id);
         return cart;
