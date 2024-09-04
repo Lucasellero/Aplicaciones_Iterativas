@@ -6,10 +6,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -37,14 +38,14 @@ public class Cars{
     
         @Column
         private Integer stock;
-
-        @ManyToOne
-        @JoinColumn(name = "category_id", nullable = false)
-        private Category category;
     
         @OneToMany(mappedBy = "car")
         private List<ShopCartLine> shopCartLines;
     
         @OneToMany(mappedBy = "car")
         private List<OrderLine> orderLines;
+        
+       @OneToOne(mappedBy = "car")
+       @JsonIgnore
+        private Image image;
     }

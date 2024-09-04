@@ -21,8 +21,6 @@ import com.uade.tpo.cars_e_commerce.service.UserService;
 @RestController
 @RequestMapping("users")
 public class UserController {
-
-
     @Autowired
     private UserService userService;
 
@@ -42,8 +40,7 @@ public class UserController {
         User result = userService.registerUser(user);
         return ResponseEntity.created(URI.create("/users/" + result.getId())).body(result);
        
-    }
-
+    } //Cambiar tiene que estar en el service
 
     @PostMapping("/login")
     public ResponseEntity<Object> loginUser(@RequestBody UserRequest userRequest) throws UserWrongPasswordException, UserDuplicateException {

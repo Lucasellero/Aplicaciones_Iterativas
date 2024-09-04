@@ -1,5 +1,6 @@
 package com.uade.tpo.cars_e_commerce.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,19 +17,16 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("carts")
+@RequestMapping("cart")
 public class ShopCartController {
+
+    @Autowired
     private final ShopCartService shopCartService;
-    /* 
+
     @GetMapping("/{cartId}/my-cart")
-    public String getMethodName(@RequestParam String param) {
-        return new String();
-    }  //me parece que no hace falta
-        */
-    @GetMapping("/{cartId}/my-cart")
-    public ResponseEntity<ShopCart> getCart(@PathVariable Long cartId) {
+    public ResponseEntity<ShopCart> getCart(@PathVariable Long shopCartid) {
         try {
-            ShopCart cart = shopCartService.getCart(cartId);
+            ShopCart cart = shopCartService.getCart(shopCartid);
             return ResponseEntity.ok(cart);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -54,7 +52,5 @@ public class ShopCartController {
             return ResponseEntity.notFound().build();
         }
     }
-    
-    
     
 }   

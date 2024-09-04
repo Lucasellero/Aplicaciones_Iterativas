@@ -1,10 +1,10 @@
 package com.uade.tpo.cars_e_commerce.service;
 
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.cars_e_commerce.entity.Cars;
 import com.uade.tpo.cars_e_commerce.entity.ShopCart;
@@ -15,26 +15,30 @@ import com.uade.tpo.cars_e_commerce.repository.ShopCartRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class ShopCartLineServiceImpl implements ShopCartLineService {
     @Autowired
     private final ShopCartLineRepository shopCartLineRepository;
     @Autowired
-    private final ShopCartRepository ShopCartRepository; 
-    @Autowired
-    private final CarService carService;
-    @Autowired
+   @Lazy
     private final ShopCartService shopCartService;
+    private final ShopCartRepository shopCartRepository; 
+    private final CarService carService;
 
+    @Transactional
     @Override
     public void addItemToCart(Long cartId, Long productId, Long quantity) {
         ShopCart cart = shopCartService.getCart(cartId);
-        Cars car = carService.getCarById(productId).orElseThrow(() -> new ResourceNotFoundException("car not found"));
+        Cars car = carService.getCarById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Car not found"));
+
         ShopCartLine cartItem = cart.getShopCartLine()
-                                .stream()
-                                .filter(item -> item.getCar().getCarId().equals(productId))
-                                .findFirst().orElse(new ShopCartLine());
+                .stream()
+                .filter(item -> item.getCar().getCarId().equals(productId))
+                .findFirst()
+                .orElse(new ShopCartLine());
+
         if (cartItem.getCar() == null) {
             cartItem.setShopCart(cart);
             cartItem.setCar(car);
@@ -43,19 +47,23 @@ public class ShopCartLineServiceImpl implements ShopCartLineService {
         } else {
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
         }
+
         cartItem.setTotalPrice();
         cart.addItem(cartItem);
-        shopCartLineRepository.save(cartItem);
-        ShopCartRepository.save(cart);
 
+        shopCartLineRepository.save(cartItem);
+        shopCartRepository.save(cart);
     }
 
     @Override
     public void removeItemFromCart(Long cartId, Long productId) {
         ShopCart cart = shopCartService.getCart(cartId);
-        ShopCartLine itemToRemove = getCartItem(cartId, productId);
+        ShopCartLine itemToRemove = cart.getShopCartLine()
+            .stream()
+            .filter(item -> item.getCar().getCarId().equals(productId))
+            .findFirst().orElseThrow(()-> new ResourceNotFoundException("Auto no encontrado"));
         cart.removeItem(itemToRemove);
-        ShopCartRepository.save(cart);
+        shopCartRepository.save(cart);
     }
 
     @Override
@@ -67,14 +75,12 @@ public class ShopCartLineServiceImpl implements ShopCartLineService {
             .findFirst()
             .ifPresent(item -> {
                 item.setQuantity(quantity);
-                item.setUnitPrice(item.getCar().getPrice()); // redundante
                 item.setTotalPrice();
                 shopCartLineRepository.save(item);
             });
 
-            Double totalAmount = cart.getTotalAmount();
-            cart.setTotalAmount(totalAmount);
-            ShopCartRepository.save(cart);
+        cart.updateTotalAmount();
+        shopCartRepository.save(cart);
     }
 
     @Override
@@ -84,11 +90,6 @@ public class ShopCartLineServiceImpl implements ShopCartLineService {
             .stream()
             .filter(item -> item.getCar().getCarId().equals(productId))
             .findFirst()
-            .orElseThrow(() -> new ResourceNotFoundException("car not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Auto no encontrado"));
     }
-
-    // TODO Decrease quantity of a product in the cart one by one. If quantity is 1, remove the product from the cart.
-    // TODO Increase quantity of a product in the cart one by one.
-
-    
 }

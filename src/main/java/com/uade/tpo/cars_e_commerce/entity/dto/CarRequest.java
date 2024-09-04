@@ -11,4 +11,5 @@ public class CarRequest {
     private String color;
     private Double price;
     private Integer stock;
+    
 }

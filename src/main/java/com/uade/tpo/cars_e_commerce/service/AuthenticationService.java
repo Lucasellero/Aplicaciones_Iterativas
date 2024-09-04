@@ -26,11 +26,12 @@ public class AuthenticationService {
         private final JwtService jwtService;
         private final AuthenticationManager authenticationManager;
         
-        public User findUserByUsername(String username) {
-        return repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-        }
+        
       public AuthenticationResponse register(UserRequest request) {
+        if (repository.findByEmail(request.getEmail()).isPresent() ||
+        repository.findByUsername(request.getUsername()).isPresent()) {
+        throw new IllegalArgumentException("El correo electrónico o nombre de usuario ya existe");
+    }
                 var user = User.builder()
                                 .email(request.getEmail())
                                 .password(passwordEncoder.encode(request.getPassword()))
@@ -39,6 +40,7 @@ public class AuthenticationService {
                                 .phone_number(request.getPhone_number())
                                 .home_address(request.getHome_address())
                                 .role(request.getRole()) 
+                                .username(request.getUsername())
                                 .build();
                 repository.save(user);
                 var jwtToken = jwtService.generateToken( user);
@@ -50,10 +52,10 @@ public class AuthenticationService {
         public AuthenticationResponse authenticate(AuthenticationRequest request) {
                 authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(
-                                                request.getEmail(),
+                                                request.getUsername(),
                                                 request.getPassword()));
 
-                var user = repository.findByEmail(request.getEmail())
+                var user = repository.findByUsername(request.getUsername())
                                 .orElseThrow();
                 var jwtToken = jwtService.generateToken(user);
                 return AuthenticationResponse.builder()
@@ -61,5 +63,9 @@ public class AuthenticationService {
                                 .build();
         }
         
+         public User findUserByUsername(String username) {
+        return repository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        }
 }
 

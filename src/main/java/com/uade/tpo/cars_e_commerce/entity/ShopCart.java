@@ -1,5 +1,4 @@
 package com.uade.tpo.cars_e_commerce.entity;
-import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -30,9 +29,14 @@ public class ShopCart {
         @Column
         private Double totalAmount = Double.valueOf(0);
 
+        private String status;
+
         @OneToOne
         @JoinColumn(name = "user_id", nullable = false)
         private User user;
+
+        @Column (name = "user_id", insertable = false, updatable = false)
+        private Long userId;
 
         @OneToMany(mappedBy = "shopCart", cascade = CascadeType.ALL, orphanRemoval = true)
         private Set<ShopCartLine> shopCartLine;
@@ -42,6 +46,7 @@ public class ShopCart {
                 shopCartLine.setShopCart(this);
                 updateTotalAmount();
         }
+
 
         public void removeItem(ShopCartLine shopCartLine) {
                 this.shopCartLine.remove(shopCartLine);

@@ -47,6 +47,7 @@ public class JwtService {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+  
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -66,4 +67,10 @@ public class JwtService {
         SecretKey secretKeySpec = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         return secretKeySpec;
     }
+
+   
+
+
+
+    
 }

@@ -12,11 +12,11 @@ import com.uade.tpo.cars_e_commerce.exceptions.CarNotFoundException;
 
 public interface CarService {
 
-    Page<Cars> getCars(PageRequest pageRequest);
-
-    List<Cars> getAllCars();
+    List<Cars> getCars();
 
     Optional<Cars> getCarById(Long carId);
+
+    void deleteCar(Long carId) throws CarNotFoundException;
 
     Cars createCar(Cars car) throws CarDuplicateException;
 
@@ -31,4 +31,7 @@ public interface CarService {
     List<Cars> getCarByModelName(String modelName) throws CarNotFoundException;
 
     List<Cars> getCarByModelYear(int modelYear) throws CarNotFoundException;
+    
+    Cars updateCar(Long cardId, Cars updateCar);
+
 }

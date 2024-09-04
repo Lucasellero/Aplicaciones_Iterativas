@@ -20,8 +20,8 @@ public class CarServiceImpl implements CarService {
     private CarRepository carRepository;
 
     @Override
-    public Page<Cars> getCars(PageRequest pageRequest) {
-        return carRepository.findAll(pageRequest);
+    public List<Cars> getCars() {
+        return carRepository.findAll();
     }
 
     @Override
@@ -43,9 +43,6 @@ public class CarServiceImpl implements CarService {
         return carRepository.save(car);
     }
 
-    public List<Cars> getAllCars() {
-        return carRepository.findAll(); 
-    }
 
     @Override
     public List<Cars> getCarByManufacturer(String manufacturer) throws CarNotFoundException {
@@ -76,4 +73,36 @@ public class CarServiceImpl implements CarService {
     public List<Cars> getCarByModelYear(int modelYear) throws CarNotFoundException{
         return carRepository.findByModelYear(modelYear);
     }
+
+    @Override
+    public void deleteCar(Long carId) throws CarNotFoundException {
+        if (!carRepository.existsById(carId)) {
+            throw new CarNotFoundException();
+        }
+        carRepository.deleteById(carId);
+    }
+
+
+    //Metodo para actualizar un auto/producto 
+    public Cars updateCar(Long carId, Cars updatedCar) {
+        Optional<Cars> existingCarOptional = carRepository.findById(carId);
+
+        if (existingCarOptional.isPresent()) {
+            Cars existingCar = existingCarOptional.get();
+
+            // Actualizar los campos del auto
+            existingCar.setManufacturer(updatedCar.getManufacturer());
+            existingCar.setModelName(updatedCar.getModelName());
+            existingCar.setModelYear(updatedCar.getModelYear());
+            existingCar.setColor(updatedCar.getColor());
+            existingCar.setPrice(updatedCar.getPrice());
+            existingCar.setStock(updatedCar.getStock());
+
+            // Guardar los cambios
+            return carRepository.save(existingCar);
+        }
+
+        return null;
+    }
+    
 }

@@ -12,6 +12,8 @@ import com.uade.tpo.cars_e_commerce.entity.Cars;
 public interface CarRepository extends JpaRepository<Cars, Long> {
     boolean existsByManufacturerAndModelNameAndModelYear(String manufacturer, String modelName, Integer modelYear);
 
+    void deleteById(Long carId);
+
     @Query(value = "select c from Cars c where c.manufacturer = ?1")
     List<Cars> findByManufacturer(String manufacturer);
 
@@ -29,4 +31,7 @@ public interface CarRepository extends JpaRepository<Cars, Long> {
 
     @Query(value = "select c from Cars c where c.modelYear = ?1")
     List<Cars> findByModelYear(int modelYear);
+
+    
+    
 }

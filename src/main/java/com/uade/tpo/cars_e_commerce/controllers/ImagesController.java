@@ -1,0 +1,108 @@
+package com.uade.tpo.cars_e_commerce.controllers;
+
+import com.uade.tpo.cars_e_commerce.entity.Cars;
+import com.uade.tpo.cars_e_commerce.entity.Image;
+import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
+
+import lombok.Builder;
+
+import com.uade.tpo.cars_e_commerce.service.CarService;
+import com.uade.tpo.cars_e_commerce.service.ImageService;
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.Base64;
+import com.uade.tpo.cars_e_commerce.entity.Image;
+import com.uade.tpo.cars_e_commerce.service.ImageService;
+import javax.sql.rowset.serial.SerialException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
+@RestController
+@RequestMapping("images")
+public class ImagesController {
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private CarService carService;
+
+
+
+   @CrossOrigin
+@GetMapping("/display")
+public ResponseEntity<byte[]> displayImage(@RequestParam("id") long id) throws IOException, SQLException {
+    Image image = imageService.viewById(id);
+    byte[] imageBytes = image.getImage().getBytes(1, (int) image.getImage().length());
+    
+    // Establece el tipo de contenido según el formato de la imagen
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.IMAGE_JPEG); // Cambia a MediaType.IMAGE_PNG si es una imagen PNG
+    
+    return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+}
+
+    /*@PostMapping()
+    public String addImagePost(AddFileRequest request) throws IOException, SerialException, SQLException {
+        byte[] bytes = request.getFile().getBytes();
+        Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
+        imageService.create(Image.builder().image(blob).build());
+        return "created";
+    }
+        */
+   /*  @CrossOrigin
+    @GetMapping("/displayCarWithImage")
+    public ResponseEntity<CarWithImageResponse> displayCarWithImage(@RequestParam("carId") long carId, @RequestParam("imageId") long imageId) throws IOException, SQLException {        
+        Cars car = carService.getCarById(carId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Car not found"));
+        
+            Image image = imageService.getImageByCarId(imageId);
+        
+            byte[] imageBytes = image.getImage().getBytes(1, (int) image.getImage().length());
+        
+            CarWithImageResponse response = new CarWithImageResponse(
+                    car.getCarId(),
+                    car.getModelName(),
+                    car.getManufacturer(),
+                    car.getModelYear(),
+                    car.getColor(),
+                    car.getPrice(),
+                    imageBytes
+            );
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+        
+            return ResponseEntity.ok().headers(headers).body(response);
+        }*/
+
+
+    @PostMapping("/add") 
+public String addImagePost(
+        @RequestParam("file") MultipartFile file,
+        @RequestParam("carId") long carId) throws IOException, SQLException {
+    byte[] bytes = file.getBytes();
+    Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
+    
+    Cars car = carService.getCarById(carId).get();
+   
+    Image image = Image.builder()
+            .image(blob)
+            .car(car)
+            .build();
+    
+    imageService.create(image);
+    return "created";
+}
+
+
+}

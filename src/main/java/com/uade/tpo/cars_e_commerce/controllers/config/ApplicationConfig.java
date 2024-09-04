@@ -24,7 +24,7 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-       return email -> repository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));};
+       return username -> repository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));};
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
