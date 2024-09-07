@@ -1,6 +1,5 @@
 package com.uade.tpo.cars_e_commerce.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +49,6 @@ public class CarritoServiceImpl implements CarritoService {
         }
         return total;
     }
-
 
     @Override 
     public Carrito addProduct(Long cartId, Long productId) throws ResourceNotFoundException {

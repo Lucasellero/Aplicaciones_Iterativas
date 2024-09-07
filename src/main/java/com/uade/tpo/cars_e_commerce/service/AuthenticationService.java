@@ -44,13 +44,15 @@ public class AuthenticationService {
                                 .role(request.getRole()) 
                                 .username(request.getUsername())
                                 .build();
-                                
+
+                User usernuevo= UserRepository.save(user);// en un futuro poner pija
+                //Que no se cree el carrito si sos ADMI
                 var cart = Carrito.builder()
-                                .user(user)
+                                .user(usernuevo)
+                                .carritoId(usernuevo.getId())
+                                .total(0.0)
                                 .build();
 
-                cart.setCarritoId(user.getId());
-                UserRepository.save(user);
                 CarritoRepository.save(cart);
                 var jwtToken = jwtService.generateToken( user);
                 return AuthenticationResponse.builder()

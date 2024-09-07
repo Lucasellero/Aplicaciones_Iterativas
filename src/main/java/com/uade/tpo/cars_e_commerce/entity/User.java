@@ -75,6 +75,7 @@ public class User implements UserDetails {
     private List<Order> ordenCompra;
 
     @OneToOne (mappedBy = "user")
+    @JsonIgnore
     private Carrito carrito;
     
     @Override

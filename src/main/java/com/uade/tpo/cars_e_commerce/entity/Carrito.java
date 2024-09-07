@@ -1,6 +1,8 @@
 package com.uade.tpo.cars_e_commerce.entity;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -24,6 +26,7 @@ public class Carrito {
  
     @OneToOne 
     @JoinColumn(name = "usuario_id")
+    @JsonIgnore // Evita que se genere un loop infinito al serializar el objeto
     private User user;
 
     @Id

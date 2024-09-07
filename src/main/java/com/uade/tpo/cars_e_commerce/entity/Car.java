@@ -39,7 +39,7 @@ public class Car{
         private Integer stock;
         
        @OneToOne(mappedBy = "car")
-       @JsonIgnore
+       @JsonIgnore // Para probar despues
         private Image image;
 
        /*  @OneToMany(mappedBy = "car")
