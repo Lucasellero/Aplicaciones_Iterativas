@@ -1,18 +1,16 @@
 package com.uade.tpo.cars_e_commerce.entity;
 import java.util.Map;
-import java.util.ArrayList;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
@@ -30,7 +28,7 @@ public class Carrito {
 
     @Id
     @Column(name = "id")
-    private Long carritoId = user.getId();
+    private Long carritoId;
 
     @ElementCollection
     @Column(name = "items")
