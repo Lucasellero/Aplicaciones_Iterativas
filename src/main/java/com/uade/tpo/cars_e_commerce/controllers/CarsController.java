@@ -3,8 +3,6 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,10 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.uade.tpo.cars_e_commerce.entity.Cars;
+import com.uade.tpo.cars_e_commerce.entity.Car;
 import com.uade.tpo.cars_e_commerce.entity.dto.CarRequest;
 import com.uade.tpo.cars_e_commerce.exceptions.CarDuplicateException;
 import com.uade.tpo.cars_e_commerce.exceptions.CarNotFoundException;
@@ -24,7 +21,7 @@ import com.uade.tpo.cars_e_commerce.service.CarService;
 
 
 @RestController
-@RequestMapping("cars")
+@RequestMapping("car")
 public class CarsController {
 
     @Autowired
@@ -33,14 +30,14 @@ public class CarsController {
     @PostMapping ("/create")
     public ResponseEntity<Object> createCar(@RequestBody CarRequest carRequest) throws CarDuplicateException {
         try{
-            Cars car = new Cars();
+            Car car = new Car();
             car.setManufacturer(carRequest.getManufacturer());
             car.setModelName(carRequest.getModelName());
             car.setModelYear(carRequest.getModelYear());
             car.setColor(carRequest.getColor());
             car.setPrice(carRequest.getPrice());
             car.setStock(carRequest.getStock());
-            Cars result = carService.createCar(car);
+            Car result = carService.createCar(car);
             URI location = URI.create("/cars/" + result.getCarId());
             return ResponseEntity.created(location).body(result);
         }catch (CarDuplicateException e){
@@ -60,59 +57,57 @@ public class CarsController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Cars>> getAllCars() {
-        List<Cars> result = carService.getCars();
+    public ResponseEntity<List<Car>> getAllCars() {
+        List<Car> result = carService.getCars();
         return ResponseEntity.ok(result);
     }
 
-
-    
     
 
     //FILTROS
     @GetMapping("/manufacturer/{manufacturer}")
-    public ResponseEntity<List<Cars>> getCarByManufacturer(@PathVariable String manufacturer) throws CarNotFoundException {
-        List<Cars> result = carService.getCarByManufacturer(manufacturer);
+    public ResponseEntity<List<Car>> getCarByManufacturer(@PathVariable String manufacturer) throws CarNotFoundException {
+        List<Car> result = carService.getCarByManufacturer(manufacturer);
         if (result.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/price/{price}")
-    public ResponseEntity<List<Cars>> getCarByPrice(@PathVariable Double price) throws CarNotFoundException {
-        List<Cars> result = carService.getCarByPrice(price);
+    public ResponseEntity<List<Car>> getCarByPrice(@PathVariable Double price) throws CarNotFoundException {
+        List<Car> result = carService.getCarByPrice(price);
         if (result.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/price-range/{price_min}/{price_max}")
-    public ResponseEntity<List<Cars>> getCarByPriceRange(@PathVariable Double price_min, @PathVariable Double price_max) throws CarNotFoundException {
-        List<Cars> result = carService.getCarByPriceRange(price_min, price_max);
+    /*@GetMapping("/price-range/{price_min}/{price_max}")
+    public ResponseEntity<List<Car>> getCarByPriceRange(@PathVariable Double price_min, @PathVariable Double price_max) throws CarNotFoundException {
+        List<Car> result = carService.getCarByPriceRange(price_min, price_max);
         if (result.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(result);
-    }
+    }*/
     
     @GetMapping("/color/{color}")
-    public ResponseEntity<List<Cars>> getCarByColor(@PathVariable String color) throws CarNotFoundException {
-        List<Cars> result = carService.getCarByColor(color);
+    public ResponseEntity<List<Car>> getCarByColor(@PathVariable String color) throws CarNotFoundException {
+        List<Car> result = carService.getCarByColor(color);
         if (result.isEmpty())
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/model/{modelName}")
-    public ResponseEntity<List<Cars>> getCarByModelName(@PathVariable String modelName) throws CarNotFoundException {
-        List<Cars> result = carService.getCarByModelName(modelName);
+    @GetMapping("/model/{model_name}")
+    public ResponseEntity<List<Car>> getCarByModelName(@PathVariable String model_name) throws CarNotFoundException {
+        List<Car> result = carService.getCarByModelName(model_name);
         if (result.isEmpty())
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/year/{model_year}")
-    public ResponseEntity<List<Cars>> getCarByModelYear(@PathVariable int modelYear) throws CarNotFoundException {
-        List<Cars> result = carService.getCarByModelYear(modelYear);
+    public ResponseEntity<List<Car>> getCarByModelYear(@PathVariable int model_year) throws CarNotFoundException {
+        List<Car> result = carService.getCarByModelYear(model_year);
         if (result.isEmpty())
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(result);
@@ -120,11 +115,11 @@ public class CarsController {
 
     //-----------------------------------MODIFICACIONES------------------------------------------------------------
     @PostMapping("/update/manufacturer/{carId}")
-    public ResponseEntity<Cars> updateManufacturer(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
-        Cars updatedCar = new Cars();
+    public ResponseEntity<Car> updateManufacturer(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
+        Car updatedCar = new Car();
         updatedCar.setManufacturer(carRequest.getManufacturer());
 
-        Cars result = carService.updateCar(carId, updatedCar);
+        Car result = carService.updateCar(carId, updatedCar);
         if (result != null) {
             return ResponseEntity.ok(result);
         } else {
@@ -133,11 +128,11 @@ public class CarsController {
     }
 
     @PostMapping("/update/color/{carId}")
-    public ResponseEntity<Cars> updateColor(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
-        Cars updatedCar = new Cars();
+    public ResponseEntity<Car> updateColor(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
+        Car updatedCar = new Car();
         updatedCar.setColor(carRequest.getColor());
 
-        Cars result = carService.updateCar(carId, updatedCar);
+        Car result = carService.updateCar(carId, updatedCar);
 
         if (result != null) {
             return ResponseEntity.ok(result);
@@ -147,11 +142,11 @@ public class CarsController {
     }
 
     @PostMapping("/update/modelYear/{carId}")
-    public ResponseEntity<Cars> updateModelYear(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
-        Cars updatedCar = new Cars();
+    public ResponseEntity<Car> updateModelYear(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
+        Car updatedCar = new Car();
         updatedCar.setModelYear(carRequest.getModelYear());
 
-        Cars result = carService.updateCar(carId, updatedCar);
+        Car result = carService.updateCar(carId, updatedCar);
         if (result != null) {
             return ResponseEntity.ok(result);
         } else {
@@ -160,11 +155,11 @@ public class CarsController {
     }
 
     @PostMapping("/update/price/{carId}")
-    public ResponseEntity<Cars> updatePrice(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
-        Cars updatedCar = new Cars();
+    public ResponseEntity<Car> updatePrice(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
+        Car updatedCar = new Car();
         updatedCar.setPrice(carRequest.getPrice());
 
-        Cars result = carService.updateCar(carId, updatedCar);
+        Car result = carService.updateCar(carId, updatedCar);
 
         if (result != null) {
             return ResponseEntity.ok(result);
@@ -174,11 +169,11 @@ public class CarsController {
     }
 
     @PostMapping("/update/stock/{carId}")
-    public ResponseEntity<Cars> updateStock(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
-        Cars updatedCar = new Cars();
+    public ResponseEntity<Car> updateStock(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
+        Car updatedCar = new Car();
         updatedCar.setStock(carRequest.getStock());
 
-        Cars result = carService.updateCar(carId, updatedCar);
+        Car result = carService.updateCar(carId, updatedCar);
 
         if (result != null) {
             return ResponseEntity.ok(result);

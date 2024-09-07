@@ -3,35 +3,32 @@ package com.uade.tpo.cars_e_commerce.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-
-import com.uade.tpo.cars_e_commerce.entity.Cars;
+import com.uade.tpo.cars_e_commerce.entity.Car;
 import com.uade.tpo.cars_e_commerce.exceptions.CarDuplicateException;
 import com.uade.tpo.cars_e_commerce.exceptions.CarNotFoundException;
 
 public interface CarService {
 
-    List<Cars> getCars();
+    List<Car> getCars();
 
-    Optional<Cars> getCarById(Long carId);
+    Optional<Car> getCarById(Long carId);
 
     void deleteCar(Long carId) throws CarNotFoundException;
 
-    Cars createCar(Cars car) throws CarDuplicateException;
+    Car createCar(Car car) throws CarDuplicateException;
 
-    List<Cars> getCarByManufacturer(String manufacturer) throws CarNotFoundException;
+    List<Car> getCarByManufacturer(String manufacturer) throws CarNotFoundException;
 
-    List<Cars> getCarByPrice(Double price) throws CarNotFoundException;
+    List<Car> getCarByPrice(Double price) throws CarNotFoundException;
 
-    List<Cars> getCarByPriceRange(Double price_min, Double price_max) throws CarNotFoundException;
+    //List<Car> getCarByPriceRange(Double price_min, Double price_max) throws CarNotFoundException;
 
-    List<Cars> getCarByColor(String Color) throws CarNotFoundException;
+    List<Car> getCarByColor(String Color) throws CarNotFoundException;
 
-    List<Cars> getCarByModelName(String modelName) throws CarNotFoundException;
+    List<Car> getCarByModelName(String modelName) throws CarNotFoundException;
 
-    List<Cars> getCarByModelYear(int modelYear) throws CarNotFoundException;
+    List<Car> getCarByModelYear(int modelYear) throws CarNotFoundException;
     
-    Cars updateCar(Long cardId, Cars updateCar);
+    Car updateCar(Long cardId, Car updateCar);
 
 }

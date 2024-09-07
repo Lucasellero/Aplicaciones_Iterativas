@@ -1,4 +1,4 @@
-/*package com.uade.tpo.cars_e_commerce.controllers.auth;
+package com.uade.tpo.cars_e_commerce.controllers.auth;
 
 
 import lombok.AllArgsConstructor;
@@ -20,4 +20,3 @@ public class CarWithImageResponse {
     private byte[] image; // Imagen codificada en base64
 }
 
-*/

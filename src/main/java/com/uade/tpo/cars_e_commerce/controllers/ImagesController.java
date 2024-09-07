@@ -1,24 +1,13 @@
 package com.uade.tpo.cars_e_commerce.controllers;
 
-import com.uade.tpo.cars_e_commerce.entity.Cars;
-import com.uade.tpo.cars_e_commerce.entity.Image;
-import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
-
-import lombok.Builder;
-
-import com.uade.tpo.cars_e_commerce.service.CarService;
-import com.uade.tpo.cars_e_commerce.service.ImageService;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.Base64;
-import com.uade.tpo.cars_e_commerce.entity.Image;
-import com.uade.tpo.cars_e_commerce.service.ImageService;
-import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.http.MediaType;
+
+import com.uade.tpo.cars_e_commerce.controllers.auth.CarWithImageResponse;
+import com.uade.tpo.cars_e_commerce.entity.Car;
+import com.uade.tpo.cars_e_commerce.entity.Image;
+import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
+import com.uade.tpo.cars_e_commerce.service.CarService;
+import com.uade.tpo.cars_e_commerce.service.ImageService;
 @RestController
 @RequestMapping("images")
 public class ImagesController {
@@ -60,13 +55,16 @@ public ResponseEntity<byte[]> displayImage(@RequestParam("id") long id) throws I
         return "created";
     }
         */
-   /*  @CrossOrigin
+     
+   @CrossOrigin
     @GetMapping("/displayCarWithImage")
     public ResponseEntity<CarWithImageResponse> displayCarWithImage(@RequestParam("carId") long carId, @RequestParam("imageId") long imageId) throws IOException, SQLException {        
-        Cars car = carService.getCarById(carId)
+        
+        Car car = carService.getCarById(carId)
                     .orElseThrow(() -> new ResourceNotFoundException("Car not found"));
         
-            Image image = imageService.getImageByCarId(imageId);
+            
+            Image image = imageService.viewById(imageId);
         
             byte[] imageBytes = image.getImage().getBytes(1, (int) image.getImage().length());
         
@@ -83,7 +81,7 @@ public ResponseEntity<byte[]> displayImage(@RequestParam("id") long id) throws I
             headers.setContentType(MediaType.APPLICATION_JSON);
         
             return ResponseEntity.ok().headers(headers).body(response);
-        }*/
+        }
 
 
     @PostMapping("/add") 
@@ -93,7 +91,7 @@ public String addImagePost(
     byte[] bytes = file.getBytes();
     Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
     
-    Cars car = carService.getCarById(carId).get();
+    Car car = carService.getCarById(carId).get();
    
     Image image = Image.builder()
             .image(blob)

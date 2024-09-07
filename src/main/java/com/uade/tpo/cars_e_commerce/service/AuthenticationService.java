@@ -11,8 +11,10 @@ import com.uade.tpo.cars_e_commerce.controllers.auth.AuthenticationRequest;
 import com.uade.tpo.cars_e_commerce.controllers.auth.AuthenticationResponse;
 import com.uade.tpo.cars_e_commerce.controllers.auth.UserRequest;
 import com.uade.tpo.cars_e_commerce.controllers.config.JwtService;
+import com.uade.tpo.cars_e_commerce.entity.Carrito;
 import com.uade.tpo.cars_e_commerce.entity.User;
 import com.uade.tpo.cars_e_commerce.repository.UserRepository;
+import com.uade.tpo.cars_e_commerce.repository.CarritoRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,15 +23,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 
 public class AuthenticationService {
-        private final UserRepository repository;
+        private final UserRepository UserRepository;
         private final PasswordEncoder passwordEncoder;
         private final JwtService jwtService;
         private final AuthenticationManager authenticationManager;
-        
+        private final CarritoRepository CarritoRepository;
         
       public AuthenticationResponse register(UserRequest request) {
-        if (repository.findByEmail(request.getEmail()).isPresent() ||
-        repository.findByUsername(request.getUsername()).isPresent()) {
+        if (UserRepository.findByEmail(request.getEmail()).isPresent() ||
+        UserRepository.findByUsername(request.getUsername()).isPresent()) {
         throw new IllegalArgumentException("El correo electrónico o nombre de usuario ya existe");
     }
                 var user = User.builder()
@@ -42,7 +44,12 @@ public class AuthenticationService {
                                 .role(request.getRole()) 
                                 .username(request.getUsername())
                                 .build();
-                repository.save(user);
+                                
+                var cart = Carrito.builder()
+                                .user(user)
+                                .build();
+                UserRepository.save(user);
+                CarritoRepository.save(cart);
                 var jwtToken = jwtService.generateToken( user);
                 return AuthenticationResponse.builder()
                                 .accessToken(jwtToken)
@@ -55,7 +62,7 @@ public class AuthenticationService {
                                                 request.getUsername(),
                                                 request.getPassword()));
 
-                var user = repository.findByUsername(request.getUsername())
+                var user = UserRepository.findByUsername(request.getUsername())
                                 .orElseThrow();
                 var jwtToken = jwtService.generateToken(user);
                 return AuthenticationResponse.builder()
@@ -64,7 +71,7 @@ public class AuthenticationService {
         }
         
          public User findUserByUsername(String username) {
-        return repository.findByUsername(username)
+        return UserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
         }
 }

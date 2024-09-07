@@ -4,34 +4,34 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.uade.tpo.cars_e_commerce.entity.Cars;
+import com.uade.tpo.cars_e_commerce.entity.Car;
 
 @Repository
-public interface CarRepository extends JpaRepository<Cars, Long> {
+public interface CarRepository extends JpaRepository<Car, Long> {
     boolean existsByManufacturerAndModelNameAndModelYear(String manufacturer, String modelName, Integer modelYear);
 
     void deleteById(Long carId);
 
-    @Query(value = "select c from Cars c where c.manufacturer = ?1")
-    List<Cars> findByManufacturer(String manufacturer);
+    @Query(value = "select c from Car c where c.manufacturer = :manufacturer")
+    List<Car> findByManufacturer(@Param("manufacturer") String manufacturer);
 
-    @Query(value = "select c from Cars c where c.price = ?1")
-    List<Cars> findByPrice(Double price);
+    @Query(value = "select c from Car c where c.price = :price")
+    List<Car> findByPrice(@Param("price") Double price);
 
-    @Query(value = "select c from Cars c where c.price > ?1 and c.price < ?2")
-    List<Cars> findByRangePrice(Double price_min, Double price_max);
+    /*@Query(value = "select c from car c where c.price > ?1 and c.price < ?2")
+    List<Car> findByRangePrice(Double price_min, Double price_max); */
 
-    @Query(value = "select c from Cars c where c.color = ?1")
-    List<Cars> findByColor(String Color);
+    @Query(value = "select c from Car c where c.color = :color") 
+    List<Car> findByColor(@Param("color") String color);
 
-    @Query(value = "select c from Cars c where c.modelName = ?1")
-    List<Cars> findByModelName(String modelName);
+    @Query(value = "select c from Car c where c.model_name = :model_name")
+    List<Car> findByModelName(@Param("model_name") String modelName);
 
-    @Query(value = "select c from Cars c where c.modelYear = ?1")
-    List<Cars> findByModelYear(int modelYear);
-
-    
-    
+    @Query(value = "select c from Car c where c.model_year = :model_year")
+    List<Car> findByModelYear(@Param("model_year") Integer modelYear);    
 }
+
+

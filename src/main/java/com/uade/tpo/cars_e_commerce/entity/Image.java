@@ -37,6 +37,6 @@ public class Image {
 
     @OneToOne
     @JoinColumn(name = "car_id")
-    private Cars car;
+    private Car car;
     
 }

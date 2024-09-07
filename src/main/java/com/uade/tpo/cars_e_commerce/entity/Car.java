@@ -1,5 +1,7 @@
 package com.uade.tpo.cars_e_commerce.entity;
-import java.util.List;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,14 +10,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
 @Data
-public class Cars{
+@Table(name = "Car")
+public class Car{
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,22 +32,19 @@ public class Cars{
         @Column(name = "model_year")
         private int modelYear;
     
-        @Column
+        @Column(name = "color")
         private String color;
     
-        @Column
+        @Column(name = "price")
         private Double price;
     
         @Column
         private Integer stock;
-    
-        @OneToMany(mappedBy = "car")
-        private List<ShopCartLine> shopCartLines;
-    
-        @OneToMany(mappedBy = "car")
-        private List<OrderLine> orderLines;
         
        @OneToOne(mappedBy = "car")
        @JsonIgnore
         private Image image;
+
+       /*  @OneToMany(mappedBy = "car")
+        private Set<Carrito> carritos;*/
     }

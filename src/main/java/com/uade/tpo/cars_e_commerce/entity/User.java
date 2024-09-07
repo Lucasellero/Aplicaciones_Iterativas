@@ -75,7 +75,7 @@ public class User implements UserDetails {
     private List<Order> ordenCompra;
 
     @OneToOne (mappedBy = "user")
-    private ShopCart carrito;
+    private Carrito carrito;
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

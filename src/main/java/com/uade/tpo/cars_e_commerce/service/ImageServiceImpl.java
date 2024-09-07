@@ -1,15 +1,14 @@
 package com.uade.tpo.cars_e_commerce.service;
 
-import com.uade.tpo.cars_e_commerce.entity.Cars;
-import com.uade.tpo.cars_e_commerce.entity.Image;
-import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
-import com.uade.tpo.cars_e_commerce.repository.ImageRepository;
-
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.uade.tpo.cars_e_commerce.entity.Car;
+import com.uade.tpo.cars_e_commerce.entity.Image;
+import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
+import com.uade.tpo.cars_e_commerce.repository.ImageRepository;
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -36,7 +35,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Image findByCarId(Long carId) {
         // Obtén el objeto Car usando carId
-        Cars car = carService.getCarById(carId)
+        Car car = carService.getCarById(carId)
                 .orElseThrow(() -> new ResourceNotFoundException("Car not found with id " + carId));
 
         // Busca la imagen asociada al coche y lanza una excepción si no se encuentra
@@ -46,7 +45,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Image getImageByCarId(Long carId) {
-    Cars car = carService.getCarById(carId)
+    Car car = carService.getCarById(carId)
             .orElseThrow(() -> new ResourceNotFoundException("Car not found with id " + carId));
 
     return imageRepository.findByCar(car)
