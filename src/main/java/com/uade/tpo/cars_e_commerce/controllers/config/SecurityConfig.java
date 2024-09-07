@@ -26,19 +26,28 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
             http
                             .csrf(AbstractHttpConfigurer::disable)
-                            .authorizeHttpRequests(req -> req.requestMatchers("/api/v1/auth/**").permitAll()
+                            .authorizeHttpRequests(req -> req
+                                             //cartItems, orders es lo que faltaria y capaz se usa.
+                                            .requestMatchers("/api/v1/auth/**").permitAll()
                                             .requestMatchers("/api/v1/auth/register").permitAll()
                                             .requestMatchers("/api/v1/auth/login").permitAll()
+                                            .requestMatchers("/api/v1/auth/users").hasAnyAuthority(Role.ADMIN.name())
+                                            .requestMatchers("/users/get-user-by-username").hasAnyAuthority(Role.ADMIN.name())
+                                            .requestMatchers("/users/get-all-users").hasAnyAuthority(Role.ADMIN.name())
+
+                                            .requestMatchers("/car/create").hasAnyAuthority(Role.ADMIN.name())
+                                            .requestMatchers("/car/delete").hasAnyAuthority(Role.ADMIN.name())
+                                            .requestMatchers("/car/manufacturer").permitAll()
+                                            .requestMatchers("/car/price").permitAll()
+                                            .requestMatchers("/car/color").permitAll()
+                                            .requestMatchers("/car/model").permitAll()
+                                            .requestMatchers("/car/year").permitAll()
+                                            .requestMatchers("/car/update/**").hasAnyAuthority(Role.ADMIN.name())
+
+                                            .requestMatchers("/carrito/**").hasAnyAuthority(Role.USER.name())
+
                                             .requestMatchers("/error/**").permitAll()
-                                            .requestMatchers("/user/**").hasAnyAuthority(Role.ADMIN.name())
-                                            .requestMatchers("/cars/**").hasAnyAuthority(Role.ADMIN.name(), Role.USER.name())
-                                            .requestMatchers("/cars/{id}").hasAnyAuthority(Role.ADMIN.name())
-                                            .requestMatchers("/cars/create").hasAnyAuthority(Role.ADMIN.name())
-                                            .requestMatchers("/cart/**").hasAnyAuthority(Role.ADMIN.name(), Role.USER.name())
-                                            .requestMatchers("/orders/**").hasAnyAuthority(Role.ADMIN.name(), Role.USER.name())
-                                            .requestMatchers("/cartItems/**").hasAnyAuthority(Role.ADMIN.name(), Role.USER.name())
-                                            .requestMatchers("/cartItems/item/add").hasAnyAuthority(Role.ADMIN.name(), Role.USER.name())
-                                            .requestMatchers("/carrito/**").hasAnyAuthority(Role.ADMIN.name(),Role.USER.name())
+
                                             .anyRequest()
                                             .authenticated())
                             .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

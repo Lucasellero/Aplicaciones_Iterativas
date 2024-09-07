@@ -40,7 +40,7 @@ public class UserController {
         User result = userService.registerUser(user);
         return ResponseEntity.created(URI.create("/users/" + result.getId())).body(result);
        
-    } //Cambiar tiene que estar en el service
+    }
 
     @PostMapping("/login")
     public ResponseEntity<Object> loginUser(@RequestBody UserRequest userRequest) throws UserWrongPasswordException, UserDuplicateException {
@@ -53,13 +53,13 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user")
+    @GetMapping("/get-user-by-username")
     public ResponseEntity<User> getUser(@RequestParam String username) {
         User user = userService.findByUsername(username);
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping
+    @GetMapping("/get-all-users")
     public ResponseEntity<Object> getAllUsers() {
         return ResponseEntity.ok(userService.findAll());
     }
