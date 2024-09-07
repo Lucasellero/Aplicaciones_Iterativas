@@ -63,7 +63,7 @@ public class CarritoController {
         }
     }
 
-    @GetMapping("/{cartId}/delete-product/{productId}")
+    @DeleteMapping("/{cartId}/delete-product/{productId}")
     public ResponseEntity<Carrito> deleteProduct(@PathVariable Long cartId, @PathVariable Long productId) {
         try {
             Carrito cart = CarritoService.deleteProduct(cartId, productId);
