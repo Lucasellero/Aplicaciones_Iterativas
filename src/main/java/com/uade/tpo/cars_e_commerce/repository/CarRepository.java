@@ -27,11 +27,11 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     @Query(value = "select c from Car c where c.color = :color") 
     List<Car> findByColor(@Param("color") String color);
 
-    @Query(value = "select c from Car c where c.model_name = :model_name")
-    List<Car> findByModelName(@Param("model_name") String modelName);
+    @Query(value = "select c from Car c where c.modelName = :modelName")
+    List<Car> findByModelName(@Param("modelName") String modelName);
 
-    @Query(value = "select c from Car c where c.model_year = :model_year")
-    List<Car> findByModelYear(@Param("model_year") Integer modelYear);    
+    @Query(value = "select c from Car c where c.modelYear = :modelYear")
+    List<Car> findByModelYear(@Param("modelYear") Integer modelYear);    
 }
 
 

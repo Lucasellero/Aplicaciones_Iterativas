@@ -13,8 +13,8 @@ import com.uade.tpo.cars_e_commerce.controllers.auth.UserRequest;
 import com.uade.tpo.cars_e_commerce.controllers.config.JwtService;
 import com.uade.tpo.cars_e_commerce.entity.Carrito;
 import com.uade.tpo.cars_e_commerce.entity.User;
-import com.uade.tpo.cars_e_commerce.repository.UserRepository;
 import com.uade.tpo.cars_e_commerce.repository.CarritoRepository;
+import com.uade.tpo.cars_e_commerce.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,6 +1,4 @@
 package com.uade.tpo.cars_e_commerce.entity;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -8,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -30,7 +27,7 @@ public class Car{
         private String modelName;
     
         @Column(name = "model_year")
-        private int modelYear;
+        private Integer modelYear;
     
         @Column(name = "color")
         private String color;
