@@ -48,6 +48,8 @@ public class AuthenticationService {
                 var cart = Carrito.builder()
                                 .user(user)
                                 .build();
+
+                cart.setCarritoId(user.getId());
                 UserRepository.save(user);
                 CarritoRepository.save(cart);
                 var jwtToken = jwtService.generateToken( user);
