@@ -39,7 +39,6 @@ public class Carrito {
     //@Column(name = "items")
     //private Map<Car, Long> items;
 
-   
     @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<CarritoItem> items = new ArrayList<>();
