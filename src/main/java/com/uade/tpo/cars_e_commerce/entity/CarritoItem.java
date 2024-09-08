@@ -30,7 +30,7 @@ public class CarritoItem {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "car_id")
+    @JoinColumn(name = "car_id")  // Esta repetido, ver cual es el que anda
     private Car car;
 
     @ManyToOne
@@ -40,4 +40,13 @@ public class CarritoItem {
 
     @Column(name = "quantity")
     private Long quantity;
+
+    //Agregado
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    public Double getSubtotal() {
+        return car.getPrice() * quantity;
+    }
 }

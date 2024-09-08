@@ -1,16 +1,17 @@
 package com.uade.tpo.cars_e_commerce.service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.uade.tpo.cars_e_commerce.entity.Carrito;
 import com.uade.tpo.cars_e_commerce.entity.Order;
 import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
 import com.uade.tpo.cars_e_commerce.repository.CarritoRepository;
 import com.uade.tpo.cars_e_commerce.repository.OrderRepository;
-import com.uade.tpo.cars_e_commerce.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
-import java.time.Instant;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -34,10 +35,22 @@ public class OrderServiceImpl implements OrderService {
                 .createdAt(Timestamp.from(Instant.now()))
                 .build();
 
+        carrito.getItems().forEach(item -> item.setOrder(order));
+
         orderRepository.save(order);
 
-        carritoRepository.delete(carrito); //Chequear si se borra el carrito o solo si se lo limpia
+        carritoRepository.delete(carrito);
 
         return order;
+    }
+
+    @Override
+    public List<Order> getOrders() {
+        return orderRepository.findAll();
+    }
+
+    @Override
+    public List<Order> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
     }
 }
