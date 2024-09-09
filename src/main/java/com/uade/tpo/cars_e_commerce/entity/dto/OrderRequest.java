@@ -8,7 +8,7 @@ public class OrderRequest {
     private String status;
     private Timestamp createdAt;
     private Double total;
-    private UserRequest user;
+    private OrderUserRequest orderUserRequest;
     private List<CarritoItemRequest> items;
 
 }

@@ -16,7 +16,7 @@ public interface CarService {
 
     void deleteCar(Long carId) throws CarNotFoundException;
 
-    Car createCar(CarRequest carRequest) throws CarDuplicateException; //CarRequest CAMBIADO
+    Car createCar(CarRequest carRequest) throws CarDuplicateException;
 
     List<Car> getCarByManufacturer(String manufacturer) throws CarNotFoundException;
 
@@ -30,6 +30,16 @@ public interface CarService {
 
     List<Car> getCarByModelYear(int modelYear) throws CarNotFoundException;
     
-    Car updateCar(Long cardId, Car updateCar);
+    Car updateManufacturer(Long carId, String manufacturer) throws CarNotFoundException;
+
+    Car updateColor(Long carId, String color) throws CarNotFoundException;
+
+    Car updateStock(Long carId, Integer stock) throws CarNotFoundException;
+
+    Car updatePrice(Long carId, Double price) throws CarNotFoundException;
+
+    Car updateModelYear(Long carId, Integer modelYear) throws CarNotFoundException;
+
+    Car updateModelName(Long carId, String modelName) throws CarNotFoundException;
 
 }

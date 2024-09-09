@@ -91,24 +91,76 @@ public class CarServiceImpl implements CarService {
         carRepository.deleteById(carId);
     }
 
-    public Car updateCar(Long carId, Car updatedCar) {
-        Optional<Car> existingCarOptional = carRepository.findById(carId);
-
-        if (existingCarOptional.isPresent()) {
-            Car existingCar = existingCarOptional.get();
-
-            existingCar.setManufacturer(updatedCar.getManufacturer());
-            existingCar.setModelName(updatedCar.getModelName());
-            existingCar.setModelYear(updatedCar.getModelYear());
-            existingCar.setColor(updatedCar.getColor());
-            existingCar.setPrice(updatedCar.getPrice());
-            existingCar.setStock(updatedCar.getStock());
-
-            return carRepository.save(existingCar);
+    @Override
+    public Car updateManufacturer(Long carId, String manufacturer) throws CarNotFoundException{
+        Optional<Car> carOptional = carRepository.findById(carId);
+        if (carOptional.isPresent()) {
+            Car existingCar = carOptional.get();
+            existingCar.setManufacturer(manufacturer);
+            return carRepository.save(existingCar); 
+        } else {
+            return null;
         }
-        return null;
     }
 
-    
-    
+    @Override
+    public Car updateColor(Long carId, String color) throws CarNotFoundException{
+        Optional<Car> carOptional = carRepository.findById(carId);
+        if (carOptional.isPresent()) {
+            Car existingCar = carOptional.get();
+            existingCar.setColor(color); 
+            return carRepository.save(existingCar); 
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Car updateModelYear(Long carId, Integer modelYear) throws CarNotFoundException {
+        Optional<Car> carOptional = carRepository.findById(carId);
+        if (carOptional.isPresent()) {
+            Car existingCar = carOptional.get();
+            existingCar.setModelYear(modelYear); 
+            return carRepository.save(existingCar); 
+        } else {
+            return null; 
+        }
+    }
+
+    @Override
+    public Car updateModelName(Long carId, String modelName) throws CarNotFoundException {
+        Optional<Car> carOptional = carRepository.findById(carId);
+        if (carOptional.isPresent()) {
+            Car existingCar = carOptional.get();
+            existingCar.setModelName(modelName); 
+            return carRepository.save(existingCar); 
+        } else {
+            return null; 
+        }
+    }
+
+    @Override
+    public Car updateStock(Long carId, Integer stock) throws CarNotFoundException{
+        Optional<Car> carOptional = carRepository.findById(carId);
+        if (carOptional.isPresent()) {
+            Car existingCar = carOptional.get();
+            existingCar.setStock(stock);
+            return carRepository.save(existingCar);
+        } else {
+            return null; 
+        }
+    }
+
+    @Override
+    public Car updatePrice(Long carId, Double price) throws CarNotFoundException{
+        Optional<Car> carOptional = carRepository.findById(carId);
+        if (carOptional.isPresent()) {
+            Car existingCar = carOptional.get();
+            existingCar.setPrice(price); 
+            return carRepository.save(existingCar); 
+        } else {
+            return null; 
+        }
+    }
+
 }

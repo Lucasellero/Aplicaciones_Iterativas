@@ -2,6 +2,7 @@ package com.uade.tpo.cars_e_commerce.controllers;
 import java.net.URI;
 import java.util.List;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -107,12 +108,10 @@ public class CarsController {
     }
 
     //-----------------------------------MODIFICACIONES------------------------------------------------------------
-    @PostMapping("/update/manufacturer/{carId}")
-    public ResponseEntity<Car> updateManufacturer(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
-        Car updatedCar = new Car();
-        updatedCar.setManufacturer(carRequest.getManufacturer());
-
-        Car result = carService.updateCar(carId, updatedCar);
+    
+    @PostMapping("/{carId}/update/manufacturer/{manufacturer}")
+    public ResponseEntity<Car> updateManufacturer(@PathVariable Long carId, @PathVariable String manufacturer) throws CarNotFoundException {
+        Car result = carService.updateManufacturer(carId, manufacturer);
         if (result != null) {
             return ResponseEntity.ok(result);
         } else {
@@ -120,13 +119,9 @@ public class CarsController {
         }
     }
 
-    @PostMapping("/update/color/{carId}")
-    public ResponseEntity<Car> updateColor(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
-        Car updatedCar = new Car();
-        updatedCar.setColor(carRequest.getColor());
-
-        Car result = carService.updateCar(carId, updatedCar);
-
+    @PostMapping("/{carId}/update/color/{color}")
+    public ResponseEntity<Car> updateColor(@PathVariable Long carId, @PathVariable String color) throws CarNotFoundException {
+        Car result = carService.updateColor(carId, color);
         if (result != null) {
             return ResponseEntity.ok(result);
         } else {
@@ -134,12 +129,9 @@ public class CarsController {
         }
     }
 
-    @PostMapping("/update/modelYear/{carId}")
-    public ResponseEntity<Car> updateModelYear(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
-        Car updatedCar = new Car();
-        updatedCar.setModelYear(carRequest.getModelYear());
-
-        Car result = carService.updateCar(carId, updatedCar);
+    @PostMapping("/{carId}/update/modelYear/{modelYear}")
+    public ResponseEntity<Car> updateModelYear(@PathVariable Long carId, @PathVariable Integer modelYear) throws CarNotFoundException  {
+        Car result = carService.updateModelYear(carId, modelYear);
         if (result != null) {
             return ResponseEntity.ok(result);
         } else {
@@ -147,13 +139,10 @@ public class CarsController {
         }
     }
 
-    @PostMapping("/update/price/{carId}")
-    public ResponseEntity<Car> updatePrice(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
-        Car updatedCar = new Car();
-        updatedCar.setPrice(carRequest.getPrice());
 
-        Car result = carService.updateCar(carId, updatedCar);
-
+    @PostMapping("/{carId}/update/modelName/{modelName}")
+    public ResponseEntity<Car> updateModelName(@PathVariable Long carId, @PathVariable String modelName) throws CarNotFoundException  {
+        Car result = carService.updateModelName(carId, modelName);
         if (result != null) {
             return ResponseEntity.ok(result);
         } else {
@@ -161,21 +150,30 @@ public class CarsController {
         }
     }
 
-    @PostMapping("/update/stock/{carId}")
-    public ResponseEntity<Car> updateStock(@PathVariable Long carId, @RequestBody CarRequest carRequest) {
-        Car updatedCar = new Car();
-        updatedCar.setStock(carRequest.getStock());
 
-        Car result = carService.updateCar(carId, updatedCar);
 
+    @PostMapping("/{carId}/update/price/{price}")
+    public ResponseEntity<Car> updatePrice(@PathVariable Long carId, @PathVariable Double price)  throws CarNotFoundException {
+        Car result = carService.updatePrice(carId, price);
         if (result != null) {
             return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+
+    @PostMapping("/{carId}/update/stock/{stock}")
+    public ResponseEntity<Car> updateStock(@PathVariable Long carId, @PathVariable Integer stock) throws CarNotFoundException  {
+        Car result = carService.updateStock(carId, stock);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }
-
     
 
 

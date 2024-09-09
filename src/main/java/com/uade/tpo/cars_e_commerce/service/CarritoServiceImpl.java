@@ -69,21 +69,31 @@ public Carrito clearCart(Long id) throws ResourceNotFoundException {
     
     @Override
     public Carrito addProduct(Long cartId, Long productId) throws ResourceNotFoundException {
+
         Carrito carrito = carritoRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found for this id :: " + cartId));
-
+    
         Car car = carRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Car not found for this id :: " + productId));
-
+    
         Optional<CarritoItem> existingItem = carrito.getItems().stream()
                 .filter(item -> item.getCar().getCarId().equals(productId))
                 .findFirst();
-
+    
         if (existingItem.isPresent()) {
             CarritoItem item = existingItem.get();
+
+            if (item.getQuantity() + 1 > car.getStock()) {
+                throw new IllegalArgumentException("No hay cantidad suficiente en stock para el producto con id :: " + productId);
+            }
+    
             item.setQuantity(item.getQuantity() + 1);
             carritoItemRepository.save(item);
         } else {
+            if (1 > car.getStock()) {
+                throw new IllegalArgumentException("No hay cantidad suficiente en stock para el producto con id :: " + productId);
+            }
+    
             CarritoItem newItem = CarritoItem.builder()
                     .car(car)
                     .quantity(1L)
@@ -92,7 +102,6 @@ public Carrito clearCart(Long id) throws ResourceNotFoundException {
             carrito.getItems().add(newItem);
             carritoItemRepository.save(newItem);
         }
-
         carrito.setTotal(calculateTotal(carrito.getItems()));
         return carritoRepository.save(carrito);
     }
@@ -136,70 +145,85 @@ public Carrito clearCart(Long id) throws ResourceNotFoundException {
         return carritoRepository.save(carrito);
     }
 
-    @Override
-    public Carrito increaseProduct(Long cartId, Long productId) throws ResourceNotFoundException {
-        Carrito carrito = carritoRepository.findById(cartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found for this id :: " + cartId));
+@Override
+public Carrito increaseProduct(Long cartId, Long productId) throws ResourceNotFoundException {
+    Carrito carrito = carritoRepository.findById(cartId)
+            .orElseThrow(() -> new ResourceNotFoundException("Cart not found for this id :: " + cartId));
+    Car car = carRepository.findById(productId)
+            .orElseThrow(() -> new ResourceNotFoundException("Car not found for this id :: " + productId));
+    Optional<CarritoItem> existingItem = carrito.getItems().stream()
+            .filter(item -> item.getCar().getCarId().equals(productId))
+            .findFirst();
 
-        Car car = carRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Car not found for this id :: " + productId));
+    if (existingItem.isPresent()) {
+        CarritoItem item = existingItem.get();
+        if (item.getQuantity() + 1 > car.getStock()) {
+            throw new IllegalArgumentException("No hay cantidad suficiente en stock para el producto con id :: " + productId);
+        }
 
-        Optional<CarritoItem> existingItem = carrito.getItems().stream()
-                .filter(item -> item.getCar().getCarId().equals(productId))
-                .findFirst();
+        item.setQuantity(item.getQuantity() + 1);
+        carritoItemRepository.save(item);
+    } else {
+        if (1 > car.getStock()) {
+            throw new IllegalArgumentException("No hay cantidad suficiente en stock para el producto con id :: " + productId);
+        }
 
-        if (existingItem.isPresent()) {
-            CarritoItem item = existingItem.get();
-            item.setQuantity(item.getQuantity() + 1);
+        CarritoItem newItem = CarritoItem.builder()
+                .car(car)
+                .quantity(1L)
+                .carrito(carrito)
+                .build();
+        carrito.getItems().add(newItem);
+        carritoItemRepository.save(newItem);
+    }
+    carrito.setTotal(calculateTotal(carrito.getItems()));
+    return carritoRepository.save(carrito);
+}
+
+
+@Override
+public Carrito updateProductQuantity(Long cartId, Long productId, Long quantity) throws ResourceNotFoundException {
+    Carrito carrito = carritoRepository.findById(cartId)
+            .orElseThrow(() -> new ResourceNotFoundException("Cart not found for this id :: " + cartId));
+
+    Car car = carRepository.findById(productId)
+            .orElseThrow(() -> new ResourceNotFoundException("Car not found for this id :: " + productId));
+
+    Optional<CarritoItem> existingItem = carrito.getItems().stream()
+            .filter(item -> item.getCar().getCarId().equals(productId))
+            .findFirst();
+
+    if (existingItem.isPresent()) {
+        CarritoItem item = existingItem.get();
+        
+        if (quantity > 0) {
+            if (quantity > car.getStock()) {
+                throw new IllegalArgumentException("No hay cantidad suficiente en stock para el producto con id :: " + productId);
+            }
+            
+            item.setQuantity(quantity);
             carritoItemRepository.save(item);
         } else {
-            CarritoItem newItem = CarritoItem.builder()
-                    .car(car)
-                    .quantity(1L)
-                    .carrito(carrito)
-                    .build();
-            carrito.getItems().add(newItem);
-            carritoItemRepository.save(newItem);
+            carrito.getItems().remove(item);
+            carritoItemRepository.delete(item);
+        }
+    } else if (quantity > 0) {
+        if (quantity > car.getStock()) {
+            throw new IllegalArgumentException("No hay cantidad suficiente en stock para el producto con id :: " + productId);
         }
 
-        carrito.setTotal(calculateTotal(carrito.getItems()));
-        return carritoRepository.save(carrito);
+        CarritoItem newItem = CarritoItem.builder()
+                .car(car)
+                .quantity(quantity)
+                .carrito(carrito)
+                .build();
+        carrito.getItems().add(newItem);
+        carritoItemRepository.save(newItem);
     }
+    carrito.setTotal(calculateTotal(carrito.getItems()));
+    return carritoRepository.save(carrito);
+}
 
-    @Override
-    public Carrito updateProductQuantity(Long cartId, Long productId, Long quantity) throws ResourceNotFoundException {
-        Carrito carrito = carritoRepository.findById(cartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found for this id :: " + cartId));
-
-        Car car = carRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Car not found for this id :: " + productId));
-
-        Optional<CarritoItem> existingItem = carrito.getItems().stream()
-                .filter(item -> item.getCar().getCarId().equals(productId))
-                .findFirst();
-
-        if (existingItem.isPresent()) {
-            CarritoItem item = existingItem.get();
-            if (quantity > 0) {
-                item.setQuantity(quantity);
-                carritoItemRepository.save(item);
-            } else {
-                carrito.getItems().remove(item);
-                carritoItemRepository.delete(item);
-            }
-        } else if (quantity > 0) {
-            CarritoItem newItem = CarritoItem.builder()
-                    .car(car)
-                    .quantity(quantity)
-                    .carrito(carrito)
-                    .build();
-            carrito.getItems().add(newItem);
-            carritoItemRepository.save(newItem);
-        }
-
-        carrito.setTotal(calculateTotal(carrito.getItems()));
-        return carritoRepository.save(carrito);
-    }
 
     private Double calculateTotal(List<CarritoItem> items) {
         return items.stream()
@@ -221,6 +245,10 @@ public Carrito clearCart(Long id) throws ResourceNotFoundException {
             .build();
 
         List<OrderItem> orderItems = carrito.getItems().stream().map(item -> {
+            Car car = item.getCar();
+            car.setStock(car.getStock() - item.getQuantity().intValue()); //Baja el stock del producto
+            carRepository.save(car); 
+
             OrderItem orderItem = OrderItem.builder()
                 .order(order)
                 .car(item.getCar())
