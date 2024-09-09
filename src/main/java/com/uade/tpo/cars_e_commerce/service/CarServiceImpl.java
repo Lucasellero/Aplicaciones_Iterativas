@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.cars_e_commerce.entity.Car;
+import com.uade.tpo.cars_e_commerce.entity.dto.CarRequest;
 import com.uade.tpo.cars_e_commerce.exceptions.CarDuplicateException;
 import com.uade.tpo.cars_e_commerce.exceptions.CarNotFoundException;
 import com.uade.tpo.cars_e_commerce.repository.CarRepository;
+
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -29,20 +29,29 @@ public class CarServiceImpl implements CarService {
         return carRepository.findById(carId);
     }
 
+
     @Override
-    public Car createCar(Car car) throws CarDuplicateException {
+    public Car createCar(CarRequest carRequest) throws CarDuplicateException {
         boolean exists = carRepository.existsByManufacturerAndModelNameAndModelYear(
-                car.getManufacturer(),
-                car.getModelName(),
-                car.getModelYear());
+                carRequest.getManufacturer(),
+                carRequest.getModelName(),
+                carRequest.getModelYear());
 
         if (exists) {
             throw new CarDuplicateException();
         }
 
+        Car car = new Car();
+        car.setManufacturer(carRequest.getManufacturer());
+        car.setModelName(carRequest.getModelName());
+        car.setModelYear(carRequest.getModelYear());
+        car.setColor(carRequest.getColor());
+        car.setPrice(carRequest.getPrice());
+        car.setStock(carRequest.getStock());
+        car.setUrl(carRequest.getUrl());
+
         return carRepository.save(car);
     }
-
 
     @Override
     public List<Car> getCarByManufacturer(String manufacturer) throws CarNotFoundException {
@@ -77,13 +86,11 @@ public class CarServiceImpl implements CarService {
     @Override
     public void deleteCar(Long carId) throws CarNotFoundException {
         if (!carRepository.existsById(carId)) {
-            throw new CarNotFoundException();
+            throw new CarNotFoundException("Car not found for this id :: " + carId);
         }
         carRepository.deleteById(carId);
     }
 
-
-    //Metodo para actualizar un auto/producto 
     public Car updateCar(Long carId, Car updatedCar) {
         Optional<Car> existingCarOptional = carRepository.findById(carId);
 
@@ -101,5 +108,7 @@ public class CarServiceImpl implements CarService {
         }
         return null;
     }
+
+    
     
 }

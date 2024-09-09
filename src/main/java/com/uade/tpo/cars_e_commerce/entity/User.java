@@ -70,8 +70,8 @@ public class User implements UserDetails {
     @Column
     private String phone_number;
 
-    //poner relacion de uno a mucho con ordenCompra
     @OneToMany (mappedBy = "user")
+    @JsonIgnore
     private List<Order> ordenCompra;
 
     @OneToOne (mappedBy = "user")

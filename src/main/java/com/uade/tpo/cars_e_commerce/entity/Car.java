@@ -41,15 +41,14 @@ public class Car{
         @Column
         private Integer stock;
 
-       @OneToOne(mappedBy = "car")
-       @JsonIgnore // Para probar despues
-        private Image image;
+        @Column
+        private String url;
 
-       /*  @OneToMany(mappedBy = "car")
-        private Set<Carrito> carritos;*/
+       @OneToOne(mappedBy = "car")
+       @JsonIgnore 
+        private Image image;
 
         @OneToMany(mappedBy = "car")
         @JsonIgnore
         private List<CarritoItem> carritoItems = new ArrayList<>();
-        
     }

@@ -10,4 +10,5 @@ import com.uade.tpo.cars_e_commerce.entity.Order;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByUserId(Long userId);
+    Order findById(long orderId);
 }

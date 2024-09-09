@@ -29,36 +29,45 @@ public class AuthenticationService {
         private final AuthenticationManager authenticationManager;
         private final CarritoRepository CarritoRepository;
         
-      public AuthenticationResponse register(UserRequest request) {
-        if (UserRepository.findByEmail(request.getEmail()).isPresent() ||
-        UserRepository.findByUsername(request.getUsername()).isPresent()) {
-        throw new IllegalArgumentException("El correo electrónico o nombre de usuario ya existe");
-    }
+        public AuthenticationResponse register(UserRequest request) {
+                // Validar si el email o username ya existe
+                if (UserRepository.findByEmail(request.getEmail()).isPresent() ||
+                UserRepository.findByUsername(request.getUsername()).isPresent()) {
+                    throw new IllegalArgumentException("El correo electrónico o nombre de usuario ya existe");
+                }
+        
+                // Crear el usuario
                 var user = User.builder()
-                                .email(request.getEmail())
-                                .password(passwordEncoder.encode(request.getPassword()))
-                                .name(request.getName())
-                                .surname(request.getSurname())
-                                .phone_number(request.getPhone_number())
-                                .home_address(request.getHome_address())
-                                .role(request.getRole()) 
-                                .username(request.getUsername())
-                                .build();
-
-                User usernuevo= UserRepository.save(user);// en un futuro poner pija
-                //Que no se cree el carrito si sos ADMI
-                var cart = Carrito.builder()
-                                .user(usernuevo)
-                                .carritoId(usernuevo.getId())
-                                .total(0.0)
-                                .build();
-
-                CarritoRepository.save(cart);
-                var jwtToken = jwtService.generateToken( user);
+                        .email(request.getEmail())
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .name(request.getName())
+                        .surname(request.getSurname())
+                        .phone_number(request.getPhone_number())
+                        .home_address(request.getHome_address())
+                        .role(request.getRole())
+                        .username(request.getUsername())
+                        .build();
+        
+                // Guardar el usuario en la base de datos
+                User usernuevo = UserRepository.save(user);
+        
+                // Crear el carrito solo si el usuario no es ADMIN
+                if (!request.getRole().equals("ADMIN")) {
+                    var cart = Carrito.builder()
+                            .user(usernuevo)
+                            .carritoId(usernuevo.getId())  // El ID del carrito será igual al ID del usuario
+                            .total(0.0)
+                            .build();
+                            CarritoRepository.save(cart);
+                }
+        
+                // Generar el token JWT
+                var jwtToken = jwtService.generateToken(usernuevo);
+        
                 return AuthenticationResponse.builder()
-                                .accessToken(jwtToken)
-                                .build(); 
-        }
+                        .accessToken(jwtToken)
+                        .build(); 
+            }
 
         public AuthenticationResponse authenticate(AuthenticationRequest request) {
                 authenticationManager.authenticate(

@@ -10,6 +10,5 @@ import com.uade.tpo.cars_e_commerce.entity.CarritoItem;
 
 @Repository
 public interface CarritoItemRepository extends JpaRepository<CarritoItem, Long> {
-
     List<CarritoItem> findByCarrito_CarritoId(Long carritoId);
 }

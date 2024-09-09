@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.ArrayList;
 
 @Data
 @Entity
@@ -32,18 +31,13 @@ public class Carrito {
     private User user;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "carrito_id")
     private Long carritoId;
 
-    //@ElementCollection
-    //@Column(name = "items")
-    //private Map<Car, Long> items;
-
     @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<CarritoItem> items = new ArrayList<>();
-    
+    @JsonManagedReference 
+    private List<CarritoItem> items;
+
     @Column(name = "total")
     private Double total;
-
 }

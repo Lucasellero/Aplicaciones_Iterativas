@@ -4,7 +4,6 @@ import com.uade.tpo.cars_e_commerce.entity.Carrito;
 import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
 
 public interface CarritoService {
- 
    Carrito getCart(Long cartId) throws ResourceNotFoundException;
    Carrito clearCart(Long cartId) throws ResourceNotFoundException;
    Double getTotalPrice(Long cartId) throws ResourceNotFoundException;
@@ -13,4 +12,5 @@ public interface CarritoService {
    Carrito decreaseProduct(Long cartId, Long productId) throws ResourceNotFoundException;
    Carrito increaseProduct(Long cartId, Long productId) throws ResourceNotFoundException;
    Carrito updateProductQuantity(Long cartId, Long productId, Long quantity) throws ResourceNotFoundException;
+   Carrito checkoutCarrito(Long cartId) throws ResourceNotFoundException;
 }

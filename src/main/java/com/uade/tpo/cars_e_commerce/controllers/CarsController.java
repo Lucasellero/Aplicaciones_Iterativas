@@ -17,7 +17,7 @@ import com.uade.tpo.cars_e_commerce.entity.Car;
 import com.uade.tpo.cars_e_commerce.entity.dto.CarRequest;
 import com.uade.tpo.cars_e_commerce.exceptions.CarDuplicateException;
 import com.uade.tpo.cars_e_commerce.exceptions.CarNotFoundException;
-import com.uade.tpo.cars_e_commerce.service.CarService;
+import com.uade.tpo.cars_e_commerce.service.CarService;  
 
 
 @RestController
@@ -27,20 +27,13 @@ public class CarsController {
     @Autowired
     private CarService carService;
 
-    @PostMapping ("/create")
-    public ResponseEntity<Object> createCar(@RequestBody CarRequest carRequest) throws CarDuplicateException {
-        try{
-            Car car = new Car();
-            car.setManufacturer(carRequest.getManufacturer());
-            car.setModelName(carRequest.getModelName());
-            car.setModelYear(carRequest.getModelYear());
-            car.setColor(carRequest.getColor());
-            car.setPrice(carRequest.getPrice());
-            car.setStock(carRequest.getStock());
-            Car result = carService.createCar(car);
+    @PostMapping("/create")
+    public ResponseEntity<Object> createCar(@RequestBody CarRequest carRequest) {
+        try {
+            Car result = carService.createCar(carRequest);
             URI location = URI.create("/cars/" + result.getCarId());
             return ResponseEntity.created(location).body(result);
-        }catch (CarDuplicateException e){
+        } catch (CarDuplicateException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }

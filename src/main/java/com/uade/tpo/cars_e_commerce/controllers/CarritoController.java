@@ -104,4 +104,13 @@ public class CarritoController {
         }
     }
 
+    @GetMapping("/checkout-from-cart/{cartId}")
+    public ResponseEntity<Carrito> checkoutCarrito(@PathVariable Long cartId) {
+        try {
+            Carrito carrito = CarritoService.checkoutCarrito(cartId);
+            return ResponseEntity.ok(carrito);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }   

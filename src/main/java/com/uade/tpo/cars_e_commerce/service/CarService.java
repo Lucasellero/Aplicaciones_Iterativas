@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.uade.tpo.cars_e_commerce.entity.Car;
+import com.uade.tpo.cars_e_commerce.entity.dto.CarRequest;
 import com.uade.tpo.cars_e_commerce.exceptions.CarDuplicateException;
 import com.uade.tpo.cars_e_commerce.exceptions.CarNotFoundException;
 
@@ -15,7 +16,7 @@ public interface CarService {
 
     void deleteCar(Long carId) throws CarNotFoundException;
 
-    Car createCar(Car car) throws CarDuplicateException;
+    Car createCar(CarRequest carRequest) throws CarDuplicateException; //CarRequest CAMBIADO
 
     List<Car> getCarByManufacturer(String manufacturer) throws CarNotFoundException;
 

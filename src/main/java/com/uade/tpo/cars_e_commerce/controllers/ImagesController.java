@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.uade.tpo.cars_e_commerce.controllers.auth.CarWithImageResponse;
 import com.uade.tpo.cars_e_commerce.entity.Car;
 import com.uade.tpo.cars_e_commerce.entity.Image;
-import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
 import com.uade.tpo.cars_e_commerce.service.CarService;
 import com.uade.tpo.cars_e_commerce.service.ImageService;
 @RestController
@@ -56,34 +54,6 @@ public ResponseEntity<byte[]> displayImage(@RequestParam("id") long id) throws I
     }
         */
      
-   @CrossOrigin
-    @GetMapping("/displayCarWithImage")
-    public ResponseEntity<CarWithImageResponse> displayCarWithImage(@RequestParam("carId") long carId, @RequestParam("imageId") long imageId) throws IOException, SQLException {        
-        
-        Car car = carService.getCarById(carId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Car not found"));
-        
-            
-            Image image = imageService.viewById(imageId);
-        
-            byte[] imageBytes = image.getImage().getBytes(1, (int) image.getImage().length());
-        
-            CarWithImageResponse response = new CarWithImageResponse(
-                    car.getCarId(),
-                    car.getModelName(),
-                    car.getManufacturer(),
-                    car.getModelYear(),
-                    car.getColor(),
-                    car.getPrice(),
-                    imageBytes
-            );
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-        
-            return ResponseEntity.ok().headers(headers).body(response);
-        }
-
-
     @PostMapping("/add") 
 public String addImagePost(
         @RequestParam("file") MultipartFile file,

@@ -1,9 +1,10 @@
 package com.uade.tpo.cars_e_commerce.service;
 
-import java.util.HashMap;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,23 +12,35 @@ import org.springframework.stereotype.Service;
 import com.uade.tpo.cars_e_commerce.entity.Car;
 import com.uade.tpo.cars_e_commerce.entity.Carrito;
 import com.uade.tpo.cars_e_commerce.entity.CarritoItem;
+import com.uade.tpo.cars_e_commerce.entity.Order;
+import com.uade.tpo.cars_e_commerce.entity.OrderItem;
 import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
 import com.uade.tpo.cars_e_commerce.repository.CarRepository;
 import com.uade.tpo.cars_e_commerce.repository.CarritoItemRepository;
 import com.uade.tpo.cars_e_commerce.repository.CarritoRepository;
+import com.uade.tpo.cars_e_commerce.repository.OrderItemRepository;
+import com.uade.tpo.cars_e_commerce.repository.OrderRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class CarritoServiceImpl implements CarritoService {
 
     @Autowired
     private CarritoRepository carritoRepository;
+
     @Autowired
     private CarRepository carRepository;
 
     @Autowired
     private CarritoItemRepository carritoItemRepository;
 
-    private Map<Car, Long> items = new HashMap<>();
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
 
     @Override
     public Carrito getCart(Long id) throws ResourceNotFoundException {
@@ -35,15 +48,16 @@ public class CarritoServiceImpl implements CarritoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found for this id :: " + id));
     }
 
-    @Override
-    public Carrito clearCart(Long id) throws ResourceNotFoundException {
-        Carrito carrito = carritoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found for this id :: " + id));
-        items.clear();
-        carrito.setTotal(0.0);
+@Override
+public Carrito clearCart(Long id) throws ResourceNotFoundException {
+    Carrito carrito = carritoRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Cart not found for this id :: " + id));
+    carrito.getItems().clear();
+    carrito.setTotal(0.0);
 
-        return carritoRepository.save(carrito);
-    }
+    return carritoRepository.save(carrito);
+}
+
 
     @Override
     public Double getTotalPrice(Long id) throws ResourceNotFoundException {
@@ -53,7 +67,7 @@ public class CarritoServiceImpl implements CarritoService {
         return calculateTotal(carrito.getItems());
     }
     
-      @Override
+    @Override
     public Carrito addProduct(Long cartId, Long productId) throws ResourceNotFoundException {
         Carrito carrito = carritoRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found for this id :: " + cartId));
@@ -191,5 +205,38 @@ public class CarritoServiceImpl implements CarritoService {
         return items.stream()
                 .mapToDouble(item -> item.getCar().getPrice() * item.getQuantity())
                 .sum();
+    }
+    
+    @Transactional
+    @Override
+    public Carrito checkoutCarrito(Long cartId) throws ResourceNotFoundException {
+        Carrito carrito = carritoRepository.findById(cartId)
+            .orElseThrow(() -> new ResourceNotFoundException("Cart not found for this id :: " + cartId));
+
+        Order order = Order.builder()
+            .user(carrito.getUser())
+            .total(calculateTotal(carrito.getItems()))
+            .status("CREATED")
+            .createdAt(Timestamp.from(Instant.now()))
+            .build();
+
+        List<OrderItem> orderItems = carrito.getItems().stream().map(item -> {
+            OrderItem orderItem = OrderItem.builder()
+                .order(order)
+                .car(item.getCar())
+                .quantity(item.getQuantity())
+                .price(item.getSubtotal())
+                .build();
+            return orderItem;
+        }).collect(Collectors.toList());
+
+        order.setItems(orderItems);
+
+        orderRepository.save(order);
+        orderItemRepository.saveAll(orderItems);
+
+        clearCart(cartId);
+
+        return carrito;
     }
 }

@@ -1,12 +1,7 @@
 package com.uade.tpo.cars_e_commerce.entity;
 
-import java.sql.Timestamp;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,31 +16,34 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(name = "orders")
-public class Order {
+@Table(name = "order_item")
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "item_id")
     private Long id;
-    
-    @Column
-    private String status;
-
-    @Column
-    private Timestamp createdAt;
-
-    @Column
-    private Double total;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-    
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<OrderItem> items;
+    @JoinColumn(name = "car_id", nullable = false)  // Esta repetido, ver cual es el que anda
+    private Car car;
+
+    @Column(name = "quantity")
+    private Long quantity;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = true)
+    @JsonBackReference
+    private Order order;
+
+    @Column(name = "price", nullable = false)
+    private Double price; 
+
+    public Double getSubtotal() {
+        return car.getPrice() * quantity;
+    }
 }

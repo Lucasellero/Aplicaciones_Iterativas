@@ -1,6 +1,6 @@
 package com.uade.tpo.cars_e_commerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,21 +30,16 @@ public class CarritoItem {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "car_id")  // Esta repetido, ver cual es el que anda
+    @JoinColumn(name = "car_id", nullable = false)  // Esta repetido, ver cual es el que anda
     private Car car;
 
     @ManyToOne
-    @JoinColumn(name = "carrito_id")
-    @JsonIgnore
+    @JoinColumn(name = "carrito_id", nullable = false)
+    @JsonBackReference
     private Carrito carrito;
 
     @Column(name = "quantity")
     private Long quantity;
-
-    //Agregado
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
 
     public Double getSubtotal() {
         return car.getPrice() * quantity;
