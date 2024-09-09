@@ -35,18 +35,19 @@ public class SecurityConfig {
                                             .requestMatchers("/users/get-user-by-username").hasAnyAuthority(Role.ADMIN.name())
                                             .requestMatchers("/users/get-all-users").hasAnyAuthority(Role.ADMIN.name())
 
-                                            .requestMatchers("/car/create").hasAnyAuthority(Role.ADMIN.name(), Role.USER.name()) //sacar el user dsp
+                                            .requestMatchers("/car/create").hasAnyAuthority(Role.ADMIN.name()) 
                                             .requestMatchers("/car/delete").hasAnyAuthority(Role.ADMIN.name())
                                             .requestMatchers("/car/manufacturer").permitAll()
                                             .requestMatchers("/car/price").permitAll()
                                             .requestMatchers("/car/color").permitAll()
                                             .requestMatchers("/car/model").permitAll()
                                             .requestMatchers("/car/year").permitAll()
-                                            .requestMatchers("/car/update/**").hasAnyAuthority(Role.ADMIN.name(), Role.USER.name()) //sacar el user dsp
+                                            .requestMatchers("/car/update/**").hasAnyAuthority(Role.ADMIN.name()) 
 
-                                            .requestMatchers("/image/**").hasAnyAuthority(Role.ADMIN.name(), Role.USER.name()) //sacar el user dsp
-
+                                            .requestMatchers("/image/**").hasAnyAuthority(Role.ADMIN.name())
                                             .requestMatchers("/carrito/**").hasAnyAuthority(Role.USER.name())
+
+                                            .requestMatchers("/order/**").hasAnyAuthority(Role.ADMIN.name())
 
                                             .requestMatchers("/error/**").permitAll()
 
