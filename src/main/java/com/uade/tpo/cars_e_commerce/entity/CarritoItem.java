@@ -38,10 +38,18 @@ public class CarritoItem {
     @JsonBackReference
     private Carrito carrito;
 
+    @Column(name = "subtotal")
+    private Double subtotal;
+
     @Column(name = "quantity")
     private Long quantity;
 
     public Double getSubtotal() {
-        return car.getPrice() * quantity;
+        Double price = car.getPrice();
+        Double discount = car.getDiscount() != null ? car.getDiscount() : 0.0;
+        Double discountedPrice = price - discount;
+        if (discountedPrice < 0) discountedPrice = 0.0;
+        return discountedPrice * quantity;
     }
+
 }

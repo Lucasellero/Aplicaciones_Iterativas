@@ -2,7 +2,6 @@ package com.uade.tpo.cars_e_commerce.controllers;
 import java.net.URI;
 import java.util.List;
 
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,15 +49,37 @@ public class CarsController {
 
     }
 
+    @GetMapping("/{carId}")
+    public ResponseEntity<Car> getCarById(@PathVariable Long carId) {
+        try {
+            Car car = carService.getCarById(carId)
+                                .orElseThrow(() -> new CarNotFoundException("Auto no encontrado"));
+            return ResponseEntity.ok(car);
+        } catch (CarNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+
     @GetMapping("/all")
     public ResponseEntity<List<Car>> getAllCars() {
         List<Car> result = carService.getCars();
         return ResponseEntity.ok(result);
     }
 
-    
+    @PostMapping("/{carId}/update/set-discount/{discount}")
+    public ResponseEntity<Car> updateDiscount(@PathVariable Long carId, @PathVariable Double discount)  throws CarNotFoundException {
+        Car result = carService.updateDiscount(carId, discount);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
-    //FILTROS
+
+    //-----------------------------------FILTROS------------------------------------------------------------
+
     @GetMapping("/manufacturer/{manufacturer}")
     public ResponseEntity<List<Car>> getCarByManufacturer(@PathVariable String manufacturer) throws CarNotFoundException {
         List<Car> result = carService.getCarByManufacturer(manufacturer);
@@ -151,7 +172,6 @@ public class CarsController {
     }
 
 
-
     @PostMapping("/{carId}/update/price/{price}")
     public ResponseEntity<Car> updatePrice(@PathVariable Long carId, @PathVariable Double price)  throws CarNotFoundException {
         Car result = carService.updatePrice(carId, price);
@@ -172,7 +192,6 @@ public class CarsController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
 }
     
 

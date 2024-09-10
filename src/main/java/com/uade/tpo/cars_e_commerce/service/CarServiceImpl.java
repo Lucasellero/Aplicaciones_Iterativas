@@ -163,4 +163,16 @@ public class CarServiceImpl implements CarService {
         }
     }
 
+    @Override
+    public Car updateDiscount(Long carId, Double discount) throws CarNotFoundException{
+        Optional<Car> carOptional = carRepository.findById(carId);
+        if (carOptional.isPresent()) {
+            Car existingCar = carOptional.get();
+            existingCar.setDiscount(discount); 
+            return carRepository.save(existingCar); 
+        } else {
+            return null; 
+        }
+    }
+
 }

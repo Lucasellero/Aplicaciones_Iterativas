@@ -64,7 +64,7 @@ public Carrito clearCart(Long id) throws ResourceNotFoundException {
         Carrito carrito = carritoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found for this id :: " + id));
         
-        return calculateTotal(carrito.getItems());
+        return calculateTotalWithDiscount(carrito.getItems());
     }
     
     @Override
@@ -99,11 +99,26 @@ public Carrito clearCart(Long id) throws ResourceNotFoundException {
                     .quantity(1L)
                     .carrito(carrito)
                     .build();
+                    updateItemSubTotal(newItem);
             carrito.getItems().add(newItem);
             carritoItemRepository.save(newItem);
         }
-        carrito.setTotal(calculateTotal(carrito.getItems()));
+
+        carrito.setTotal(calculateTotalWithDiscount(carrito.getItems())); 
         return carritoRepository.save(carrito);
+    }
+
+    private void updateItemSubTotal(CarritoItem item) {
+        Car car = item.getCar();
+        Double price = car.getPrice();
+        Double discount = car.getDiscount() != null ? car.getDiscount() : 0.0;
+        Double discountedPrice = price - discount;
+        if (discountedPrice < 0) discountedPrice = 0.0;
+        item.setSubtotal(discountedPrice * item.getQuantity());
+    }
+
+    private Double calculateTotalWithDiscount(List<CarritoItem> items) {
+        return items.stream().mapToDouble(item -> item.getSubtotal()).sum();
     }
 
     @Override
@@ -119,7 +134,7 @@ public Carrito clearCart(Long id) throws ResourceNotFoundException {
         carrito.getItems().remove(item);
         carritoItemRepository.delete(item);
 
-        carrito.setTotal(calculateTotal(carrito.getItems()));
+        carrito.setTotal(calculateTotalWithDiscount(carrito.getItems()));
         return carritoRepository.save(carrito);
     }
 
@@ -141,7 +156,7 @@ public Carrito clearCart(Long id) throws ResourceNotFoundException {
             carritoItemRepository.delete(item);
         }
 
-        carrito.setTotal(calculateTotal(carrito.getItems()));
+        carrito.setTotal(calculateTotalWithDiscount(carrito.getItems()));
         return carritoRepository.save(carrito);
     }
 
@@ -176,7 +191,7 @@ public Carrito increaseProduct(Long cartId, Long productId) throws ResourceNotFo
         carrito.getItems().add(newItem);
         carritoItemRepository.save(newItem);
     }
-    carrito.setTotal(calculateTotal(carrito.getItems()));
+    carrito.setTotal(calculateTotalWithDiscount(carrito.getItems()));
     return carritoRepository.save(carrito);
 }
 
@@ -220,40 +235,53 @@ public Carrito updateProductQuantity(Long cartId, Long productId, Long quantity)
         carrito.getItems().add(newItem);
         carritoItemRepository.save(newItem);
     }
-    carrito.setTotal(calculateTotal(carrito.getItems()));
+    carrito.setTotal(calculateTotalWithDiscount(carrito.getItems()));
     return carritoRepository.save(carrito);
 }
 
-
-    private Double calculateTotal(List<CarritoItem> items) {
-        return items.stream()
-                .mapToDouble(item -> item.getCar().getPrice() * item.getQuantity())
-                .sum();
-    }
-    
+  
     @Transactional
     @Override
     public Carrito checkoutCarrito(Long cartId) throws ResourceNotFoundException {
         Carrito carrito = carritoRepository.findById(cartId)
             .orElseThrow(() -> new ResourceNotFoundException("Cart not found for this id :: " + cartId));
 
+        Double totalWithDiscount = carrito.getItems().stream().mapToDouble(item -> {
+            Car car = item.getCar();
+            Double price = car.getPrice();
+            Double discount = car.getDiscount() != null ? car.getDiscount() : 0.0;
+
+            Double discountedPrice = price - discount;
+
+            if (discountedPrice < 0) {
+                discountedPrice = 0.0;
+            }
+
+            return discountedPrice * item.getQuantity();
+        }).sum();
+
         Order order = Order.builder()
             .user(carrito.getUser())
-            .total(calculateTotal(carrito.getItems()))
+            .total(totalWithDiscount) 
             .status("CREATED")
             .createdAt(Timestamp.from(Instant.now()))
             .build();
 
         List<OrderItem> orderItems = carrito.getItems().stream().map(item -> {
             Car car = item.getCar();
-            car.setStock(car.getStock() - item.getQuantity().intValue()); //Baja el stock del producto
-            carRepository.save(car); 
+            car.setStock(car.getStock() - item.getQuantity().intValue()); 
+            carRepository.save(car);
+
+            Double price = car.getPrice();
+            Double discount = car.getDiscount() != null ? car.getDiscount() : 0.0;
+            Double discountedPrice = price - discount;
+            if (discountedPrice < 0) discountedPrice = 0.0;
 
             OrderItem orderItem = OrderItem.builder()
                 .order(order)
                 .car(item.getCar())
                 .quantity(item.getQuantity())
-                .price(item.getSubtotal())
+                .total(discountedPrice * item.getQuantity())
                 .build();
             return orderItem;
         }).collect(Collectors.toList());

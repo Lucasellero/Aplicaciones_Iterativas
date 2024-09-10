@@ -40,10 +40,12 @@ public class OrderItem {
     @JsonBackReference
     private Order order;
 
-    @Column(name = "price", nullable = false)
-    private Double price; 
-
     public Double getSubtotal() {
         return car.getPrice() * quantity;
     }
+
+    @Column(name = "price", nullable = false)
+    private Double total; 
+
+   
 }

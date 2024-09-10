@@ -51,4 +51,7 @@ public class Car{
         @OneToMany(mappedBy = "car")
         @JsonIgnore
         private List<CarritoItem> carritoItems = new ArrayList<>();
+
+        @Column
+        private Double discount= 0.0;
     }
