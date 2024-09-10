@@ -27,7 +27,6 @@ public class SecurityConfig {
             http
                             .csrf(AbstractHttpConfigurer::disable)
                             .authorizeHttpRequests(req -> req
-                                             //cartItems, orders es lo que faltaria y capaz se usa
                                             .requestMatchers("/api/v1/auth/register").permitAll()
                                             .requestMatchers("/api/v1/auth/login").permitAll()
                                             .requestMatchers("/api/v1/auth/users").hasAnyAuthority(Role.ADMIN.name())
@@ -36,7 +35,7 @@ public class SecurityConfig {
                                             
                                             .requestMatchers("/car/create").hasAnyAuthority(Role.ADMIN.name()) 
                                             .requestMatchers("/car/delete").hasAnyAuthority(Role.ADMIN.name())
-                                            .requestMatchers("/car//{carId}").permitAll()
+                                            .requestMatchers("/car/{carId}").permitAll()
                                             .requestMatchers("/car/all").permitAll()
                                             .requestMatchers("/car/manufacturer/{manufacturer}").permitAll()
                                             .requestMatchers("/car/price/{price}").permitAll()
@@ -54,20 +53,19 @@ public class SecurityConfig {
                                             .requestMatchers("/image/display").permitAll()
                                             .requestMatchers("/image/add").hasAnyAuthority(Role.ADMIN.name())
                                             
-                                            .requestMatchers("/carrito/**").hasAnyAuthority(Role.USER.name())
-                                            .requestMatchers("/{cartId}/my-cart").hasAnyAuthority(Role.USER.name())
-                                            .requestMatchers("/{cartId}/clear-cart").hasAnyAuthority(Role.USER.name())
-                                            .requestMatchers("/{cartId}/total-price").hasAnyAuthority(Role.USER.name())
-                                            .requestMatchers("/{cartId}/add-product/{productId}").hasAnyAuthority(Role.USER.name())
-                                            .requestMatchers("/{cartId}/delete-product/{productId}").hasAnyAuthority(Role.USER.name())
-                                            .requestMatchers("/{cartId}/update-product/{productId}/{quantity}").hasAnyAuthority(Role.USER.name())
-                                            .requestMatchers("/{cartId}/decrease-product/{productId}").hasAnyAuthority(Role.USER.name())
-                                            .requestMatchers("/{cartId}/increase-product/{productId}").hasAnyAuthority(Role.USER.name())
-                                            .requestMatchers("/checkout-from-cart/{cartId}").hasAnyAuthority(Role.USER.name())
+                                            .requestMatchers("/carrito/{cartId}/my-cart").hasAnyAuthority(Role.USER.name())
+                                            .requestMatchers("/carrito/{cartId}/clear-cart").hasAnyAuthority(Role.USER.name())
+                                            .requestMatchers("/carrito/{cartId}/total-price").hasAnyAuthority(Role.USER.name())
+                                            .requestMatchers("/carrito/{cartId}/add-product/{productId}").hasAnyAuthority(Role.USER.name())
+                                            .requestMatchers("/carrito/{cartId}/delete-product/{productId}").hasAnyAuthority(Role.USER.name())
+                                            .requestMatchers("/carrito/{cartId}/update-product/{productId}/{quantity}").hasAnyAuthority(Role.USER.name())
+                                            .requestMatchers("/carrito/{cartId}/decrease-product/{productId}").hasAnyAuthority(Role.USER.name())
+                                            .requestMatchers("/carrito/{cartId}/increase-product/{productId}").hasAnyAuthority(Role.USER.name())
+                                            .requestMatchers("/carrito/checkout-from-cart/{cartId}").hasAnyAuthority(Role.USER.name())
 
-                                            .requestMatchers("/order/all").hasAnyAuthority(Role.USER.name())
-                                            .requestMatchers("/order/id/{orderId}").hasAnyAuthority(Role.USER.name())
-                                            .requestMatchers("/order/user/id/{userId}").hasAnyAuthority(Role.USER.name())
+                                            .requestMatchers("/order/all").hasAnyAuthority(Role.ADMIN.name())
+                                            .requestMatchers("/order/id/{orderId}").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
+                                            .requestMatchers("/order/user/id/{userId}").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
 
                                             .requestMatchers("/error/**").permitAll()
 

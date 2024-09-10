@@ -29,7 +29,7 @@ public class OrderItem {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "car_id", nullable = false)  // Esta repetido, ver cual es el que anda
+    @JoinColumn(name = "car_id", nullable = false)  
     private Car car;
 
     @Column(name = "quantity")
@@ -47,5 +47,4 @@ public class OrderItem {
     @Column(name = "price", nullable = false)
     private Double total; 
 
-   
 }

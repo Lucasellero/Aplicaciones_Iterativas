@@ -27,9 +27,9 @@ public class JwtService {
 
     private String buildToken(UserDetails userDetails,long expiration) {
         return Jwts.builder()
-                .subject(userDetails.getUsername()) // prueba@hotmail.com
+                .subject(userDetails.getUsername()) 
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .claim("authorities", userDetails.getAuthorities()) // [ROLE_USER]
+                .claim("authorities", userDetails.getAuthorities()) 
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSecretKey())
                 .compact();
@@ -47,14 +47,14 @@ public class JwtService {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
-  
+
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-   
+
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
@@ -67,10 +67,4 @@ public class JwtService {
         SecretKey secretKeySpec = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         return secretKeySpec;
     }
-
-   
-
-
-
-    
 }

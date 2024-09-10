@@ -6,5 +6,5 @@ public class CarritoItemRequest {
     private Long quantity;
     private Double subtotal;
 
-    // Getters and Setters
+
 }

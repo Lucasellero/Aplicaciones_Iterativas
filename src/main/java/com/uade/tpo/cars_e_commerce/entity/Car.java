@@ -44,8 +44,8 @@ public class Car{
         @Column
         private String url;
 
-       @OneToOne(mappedBy = "car")
-       @JsonIgnore 
+        @OneToOne(mappedBy = "car")
+        @JsonIgnore 
         private Image image;
 
         @OneToMany(mappedBy = "car")

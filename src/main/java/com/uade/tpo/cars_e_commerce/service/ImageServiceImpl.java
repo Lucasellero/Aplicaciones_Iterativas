@@ -23,7 +23,7 @@ public class ImageServiceImpl implements ImageService {
         return imageRepository.save(image);
     }
 
-      @Override
+    @Override
     public Image viewById(long id) {
         Optional<Image> optionalImage = imageRepository.findById(id);
         if (optionalImage.isPresent()) {
@@ -32,13 +32,11 @@ public class ImageServiceImpl implements ImageService {
             throw new ResourceNotFoundException("Image not found with id " + id);
         }
     }
+    
     @Override
     public Image findByCarId(Long carId) {
-        // Obtén el objeto Car usando carId
         Car car = carService.getCarById(carId)
                 .orElseThrow(() -> new ResourceNotFoundException("Car not found with id " + carId));
-
-        // Busca la imagen asociada al coche y lanza una excepción si no se encuentra
         return imageRepository.findByCar(car)
                 .orElseThrow(() -> new ResourceNotFoundException("Image not found for car id " + carId));
     }
@@ -47,7 +45,6 @@ public class ImageServiceImpl implements ImageService {
     public Image getImageByCarId(Long carId) {
     Car car = carService.getCarById(carId)
             .orElseThrow(() -> new ResourceNotFoundException("Car not found with id " + carId));
-
     return imageRepository.findByCar(car)
             .orElseThrow(() -> new ResourceNotFoundException("Image not found for car id " + carId));
 }

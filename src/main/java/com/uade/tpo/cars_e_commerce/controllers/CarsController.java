@@ -67,15 +67,6 @@ public class CarsController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/{carId}/update/set-discount/{discount}")
-    public ResponseEntity<Car> updateDiscount(@PathVariable Long carId, @PathVariable Double discount)  throws CarNotFoundException {
-        Car result = carService.updateDiscount(carId, discount);
-        if (result != null) {
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
 
 
     //-----------------------------------FILTROS------------------------------------------------------------
@@ -96,13 +87,7 @@ public class CarsController {
         return ResponseEntity.ok(result);
     }
 
-    /*@GetMapping("/price-range/{price_min}/{price_max}")
-    public ResponseEntity<List<Car>> getCarByPriceRange(@PathVariable Double price_min, @PathVariable Double price_max) throws CarNotFoundException {
-        List<Car> result = carService.getCarByPriceRange(price_min, price_max);
-        if (result.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        return ResponseEntity.ok(result);
-    }*/
+
     
     @GetMapping("/color/{color}")
     public ResponseEntity<List<Car>> getCarByColor(@PathVariable String color) throws CarNotFoundException {
@@ -186,6 +171,17 @@ public class CarsController {
     @PostMapping("/{carId}/update/stock/{stock}")
     public ResponseEntity<Car> updateStock(@PathVariable Long carId, @PathVariable Integer stock) throws CarNotFoundException  {
         Car result = carService.updateStock(carId, stock);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    
+    @PostMapping("/{carId}/update/set-discount/{discount}")
+    public ResponseEntity<Car> updateDiscount(@PathVariable Long carId, @PathVariable Double discount)  throws CarNotFoundException {
+        Car result = carService.updateDiscount(carId, discount);
         if (result != null) {
             return ResponseEntity.ok(result);
         } else {

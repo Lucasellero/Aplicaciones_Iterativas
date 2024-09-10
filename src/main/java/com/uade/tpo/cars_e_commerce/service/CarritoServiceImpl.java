@@ -239,7 +239,6 @@ public Carrito updateProductQuantity(Long cartId, Long productId, Long quantity)
     return carritoRepository.save(carrito);
 }
 
-  
     @Transactional
     @Override
     public Carrito checkoutCarrito(Long cartId) throws ResourceNotFoundException {

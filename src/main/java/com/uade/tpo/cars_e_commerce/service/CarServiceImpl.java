@@ -63,11 +63,6 @@ public class CarServiceImpl implements CarService {
         return carRepository.findByPrice(price);
     }
 
-    /*@Override
-    public List<Car> getCarByPriceRange(Double price_min,Double price_max) throws CarNotFoundException {
-        return carRepository.findByRangePrice(price_min, price_max);
-    }*/
-
     @Override
     public List<Car> getCarByColor(String color) throws CarNotFoundException{
         return carRepository.findByColor(color);

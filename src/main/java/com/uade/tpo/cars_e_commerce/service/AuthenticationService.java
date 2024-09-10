@@ -30,13 +30,10 @@ public class AuthenticationService {
         private final CarritoRepository CarritoRepository;
         
         public AuthenticationResponse register(UserRequest request) {
-                // Validar si el email o username ya existe
                 if (UserRepository.findByEmail(request.getEmail()).isPresent() ||
                 UserRepository.findByUsername(request.getUsername()).isPresent()) {
-                    throw new IllegalArgumentException("El correo electrónico o nombre de usuario ya existe");
+                throw new IllegalArgumentException("El correo electrónico o nombre de usuario ya existe");
                 }
-        
-                // Crear el usuario
                 var user = User.builder()
                         .email(request.getEmail())
                         .password(passwordEncoder.encode(request.getPassword()))
@@ -48,26 +45,22 @@ public class AuthenticationService {
                         .username(request.getUsername())
                         .build();
         
-                // Guardar el usuario en la base de datos
                 User usernuevo = UserRepository.save(user);
         
-                // Crear el carrito solo si el usuario no es ADMIN
                 if (!request.getRole().equals("ADMIN")) {
-                    var cart = Carrito.builder()
-                            .user(usernuevo)
-                            .carritoId(usernuevo.getId())  // El ID del carrito será igual al ID del usuario
-                            .total(0.0)
-                            .build();
-                            CarritoRepository.save(cart);
+                var cart = Carrito.builder()
+                        .user(usernuevo)
+                        .carritoId(usernuevo.getId())  // El ID del carrito será igual al ID del usuario
+                        .total(0.0)
+                        .build();
+                        CarritoRepository.save(cart);
                 }
-        
-                // Generar el token JWT
                 var jwtToken = jwtService.generateToken(usernuevo);
-        
+
                 return AuthenticationResponse.builder()
                         .accessToken(jwtToken)
                         .build(); 
-            }
+        }
 
         public AuthenticationResponse authenticate(AuthenticationRequest request) {
                 authenticationManager.authenticate(
@@ -83,7 +76,7 @@ public class AuthenticationService {
                                 .build();
         }
         
-         public User findUserByUsername(String username) {
+        public User findUserByUsername(String username) {
         return UserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
         }

@@ -30,7 +30,7 @@ public class CarritoItem {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "car_id", nullable = false)  // Esta repetido, ver cual es el que anda
+    @JoinColumn(name = "car_id", nullable = false)  
     private Car car;
 
     @ManyToOne

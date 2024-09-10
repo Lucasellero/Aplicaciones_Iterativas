@@ -21,6 +21,8 @@ import com.uade.tpo.cars_e_commerce.entity.Car;
 import com.uade.tpo.cars_e_commerce.entity.Image;
 import com.uade.tpo.cars_e_commerce.service.CarService;
 import com.uade.tpo.cars_e_commerce.service.ImageService;
+
+
 @RestController
 @RequestMapping("images")
 public class ImagesController {
@@ -37,23 +39,14 @@ public class ImagesController {
 public ResponseEntity<byte[]> displayImage(@RequestParam("id") long id) throws IOException, SQLException {
     Image image = imageService.viewById(id);
     byte[] imageBytes = image.getImage().getBytes(1, (int) image.getImage().length());
-    
-    // Establece el tipo de contenido según el formato de la imagen
+  
     HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.IMAGE_JPEG); // Cambia a MediaType.IMAGE_PNG si es una imagen PNG
+    headers.setContentType(MediaType.IMAGE_JPEG); 
     
     return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
 }
 
-    /*@PostMapping()
-    public String addImagePost(AddFileRequest request) throws IOException, SerialException, SQLException {
-        byte[] bytes = request.getFile().getBytes();
-        Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
-        imageService.create(Image.builder().image(blob).build());
-        return "created";
-    }
-        */
-     
+
     @PostMapping("/add") 
 public String addImagePost(
         @RequestParam("file") MultipartFile file,

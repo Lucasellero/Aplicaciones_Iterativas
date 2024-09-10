@@ -21,9 +21,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     @Query(value = "select c from Car c where c.price = :price")
     List<Car> findByPrice(@Param("price") Double price);
 
-    /*@Query(value = "select c from car c where c.price > ?1 and c.price < ?2")
-    List<Car> findByRangePrice(Double price_min, Double price_max); */
-
     @Query(value = "select c from Car c where c.color = :color") 
     List<Car> findByColor(@Param("color") String color);
 
