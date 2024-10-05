@@ -13,7 +13,8 @@ import com.uade.tpo.cars_e_commerce.entity.Car;
 public interface CarRepository extends JpaRepository<Car, Long> {
     boolean existsByManufacturerAndModelNameAndModelYear(String manufacturer, String modelName, Integer modelYear);
 
-    void deleteById(Long carId);
+    @Query (value = "DELETE FROM Car c WHERE c.id = :carId")
+    List<Car> deleteCarById(@Param("carId") Long carId);
 
     @Query(value = "select c from Car c where c.manufacturer = :manufacturer")
     List<Car> findByManufacturer(@Param("manufacturer") String manufacturer);

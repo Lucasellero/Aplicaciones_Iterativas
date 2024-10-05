@@ -10,6 +10,7 @@ import com.uade.tpo.cars_e_commerce.entity.Image;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long> {
+        
         Optional<Image> findById(Long id);
         Optional<Image> findByCar(Car car);
         

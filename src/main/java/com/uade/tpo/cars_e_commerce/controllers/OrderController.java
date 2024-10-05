@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.uade.tpo.cars_e_commerce.entity.Order;
+import com.uade.tpo.cars_e_commerce.entity.dto.OrderDTO;
 import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
 import com.uade.tpo.cars_e_commerce.service.OrderService;
 
@@ -26,15 +26,15 @@ public class OrderController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> result = orderService.getOrders();
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> result = orderService.getOrders();
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/id/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable long orderId) {
+    @GetMapping("/idOrder")
+    public ResponseEntity<OrderDTO> getOrderById(@RequestParam long orderId) {
         try {
-            Order order = orderService.getOrderById(orderId);
+            OrderDTO order = orderService.getOrderById(orderId);
             return ResponseEntity.ok(order);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -42,9 +42,9 @@ public class OrderController {
     }
         
 
-    @GetMapping("/user/id/{userId}")
-    public ResponseEntity<List<Order>> getOrdersByUserId(@PathVariable Long userId) {
-        List<Order> orders = orderService.getOrdersByUserId(userId);
+    @GetMapping("/user/id")
+    public ResponseEntity<List<OrderDTO>> getOrdersByUserId(@RequestParam Long userId) {
+        List<OrderDTO> orders = orderService.getOrdersByUserId(userId);
         return ResponseEntity.ok(orders);
     }
 }

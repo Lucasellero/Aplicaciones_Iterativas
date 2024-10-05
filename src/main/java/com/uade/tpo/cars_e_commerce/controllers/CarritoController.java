@@ -1,14 +1,18 @@
 package com.uade.tpo.cars_e_commerce.controllers;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.cars_e_commerce.entity.Carrito;
+import com.uade.tpo.cars_e_commerce.entity.dto.CarritoDTO;
+import com.uade.tpo.cars_e_commerce.entity.dto.CarritoItemDTO;
 import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
 import com.uade.tpo.cars_e_commerce.service.CarritoService;
 
@@ -21,93 +25,93 @@ import lombok.RequiredArgsConstructor;
 public class CarritoController {
 
     @Autowired
-    private final CarritoService CarritoService;
+    private final CarritoService carritoService;
 
-    @GetMapping("/{cartId}/my-cart")
-    public ResponseEntity<Carrito> getCart(@PathVariable Long cartId) {
+    @GetMapping("/my-cart")
+    public ResponseEntity<CarritoDTO> getCart(@RequestParam Long cartId) {
         try {
-            Carrito cart = CarritoService.getCart(cartId);
-            return ResponseEntity.ok(cart);
+            CarritoDTO cartDTO = carritoService.getCartDTO(cartId);
+            return ResponseEntity.ok(cartDTO);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/{cartId}/clear-cart")
-    public ResponseEntity<Carrito> clearCart (@PathVariable Long cartId) {
+    @DeleteMapping("/clear-cart")
+    public ResponseEntity<CarritoDTO> clearCart (@RequestParam Long cartId) {
         try {
-            Carrito cart = CarritoService.clearCart(cartId);
-            return ResponseEntity.ok(cart);
+            CarritoDTO cartDTO = carritoService.clearCart(cartId);
+            return ResponseEntity.ok(cartDTO);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/{cartId}/total-price")
-    public ResponseEntity<Double> getTotalPrice(@PathVariable Long cartId) {
+    @GetMapping("/total-price")
+    public ResponseEntity<Double> getTotalPrice(@RequestParam Long cartId) {
         try {
-            Double totalPrice = CarritoService.getTotalPrice(cartId);
+            Double totalPrice = carritoService.getTotalPrice(cartId);
             return ResponseEntity.ok(totalPrice);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/{cartId}/add-product/{productId}")
-    public ResponseEntity<Carrito> addProduct(@PathVariable Long cartId, @PathVariable Long productId) {
+    @PutMapping("/add-product")
+    public ResponseEntity<CarritoDTO> addProduct(@RequestParam Long cartId, @RequestParam Long productId) {
         try {
-            Carrito cart = CarritoService.addProduct(cartId, productId);
-            return ResponseEntity.ok(cart);
+            CarritoDTO cartDTO = carritoService.addProduct(cartId, productId);
+            return ResponseEntity.ok(cartDTO);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/{cartId}/delete-product/{productId}")
-    public ResponseEntity<Carrito> deleteProduct(@PathVariable Long cartId, @PathVariable Long productId) {
+    @DeleteMapping("/delete-product")
+    public ResponseEntity<CarritoDTO> deleteProduct(@RequestParam Long cartId, @RequestParam Long productId) {
         try {
-            Carrito cart = CarritoService.deleteProduct(cartId, productId);
-            return ResponseEntity.ok(cart);
+            CarritoDTO cartDTO = carritoService.deleteProduct(cartId, productId);
+            return ResponseEntity.ok(cartDTO);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/{cartId}/update-product/{productId}/{quantity}")
-    public ResponseEntity<Carrito> updateProductQuantity(@PathVariable Long cartId, @PathVariable Long productId, @PathVariable Long quantity) {
+    @PutMapping("/update-product-quantity")
+    public ResponseEntity<CarritoDTO> updateProductQuantity(@RequestParam Long cartId, @RequestParam Long productId, @RequestParam Long quantity) {
         try {
-            Carrito cart = CarritoService.updateProductQuantity(cartId, productId, quantity);
-            return ResponseEntity.ok(cart);
+            CarritoDTO cartDTO = carritoService.updateProductQuantity(cartId, productId, quantity);
+            return ResponseEntity.ok(cartDTO);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
 
-    @GetMapping("/{cartId}/decrease-product/{productId}")
-    public ResponseEntity<Carrito> decreaseProduct(@PathVariable Long cartId, @PathVariable Long productId) {
+    @PutMapping("/decrease-product")
+    public ResponseEntity<CarritoDTO> decreaseProduct(@RequestParam Long cartId, @RequestParam Long productId) {
         try {
-            Carrito cart = CarritoService.decreaseProduct(cartId, productId);
-            return ResponseEntity.ok(cart);
+            CarritoDTO cartDTO = carritoService.decreaseProduct(cartId, productId);
+            return ResponseEntity.ok(cartDTO);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/{cartId}/increase-product/{productId}")
-    public ResponseEntity<Carrito> increaseProduct(@PathVariable Long cartId, @PathVariable Long productId) {
+    @PutMapping("/increase-product")
+    public ResponseEntity<CarritoDTO> increaseProduct(@RequestParam Long cartId, @RequestParam Long productId) {
         try {
-            Carrito cart = CarritoService.increaseProduct(cartId, productId);
-            return ResponseEntity.ok(cart);
+            CarritoDTO cartDTO= carritoService.increaseProduct(cartId, productId);
+            return ResponseEntity.ok(cartDTO);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/checkout-from-cart/{cartId}")
-    public ResponseEntity<Carrito> checkoutCarrito(@PathVariable Long cartId) {
+    @PutMapping("/checkout-from-cart")
+    public ResponseEntity<Carrito> checkoutCarrito(@RequestParam Long cartId) {
         try {
-            Carrito carrito = CarritoService.checkoutCarrito(cartId);
+            Carrito carrito = carritoService.checkoutCarrito(cartId);
             return ResponseEntity.ok(carrito);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();

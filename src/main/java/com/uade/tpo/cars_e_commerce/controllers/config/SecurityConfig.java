@@ -50,8 +50,8 @@ public class SecurityConfig {
                                             .requestMatchers("/car/{carId}/update/stock/{stock}").hasAnyAuthority(Role.ADMIN.name())
                                             .requestMatchers("/car/{carId}/update/set-discount/{discount}").hasAnyAuthority(Role.ADMIN.name())
 
-                                            .requestMatchers("/image/display").permitAll()
-                                            .requestMatchers("/image/add").hasAnyAuthority(Role.ADMIN.name())
+                                            .requestMatchers("/images/display").permitAll()
+                                            .requestMatchers("/images/add").hasAnyAuthority(Role.ADMIN.name())
                                             
                                             .requestMatchers("/carrito/{cartId}/my-cart").hasAnyAuthority(Role.USER.name())
                                             .requestMatchers("/carrito/{cartId}/clear-cart").hasAnyAuthority(Role.USER.name())

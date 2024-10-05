@@ -1,6 +1,5 @@
 package com.uade.tpo.cars_e_commerce.controllers.auth;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.cars_e_commerce.controllers.config.JwtService;
 import com.uade.tpo.cars_e_commerce.service.AuthenticationService;
-import com.uade.tpo.cars_e_commerce.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,8 +25,7 @@ public class AuthenticationController {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-    @Autowired
-    private final UserService userService;
+
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(

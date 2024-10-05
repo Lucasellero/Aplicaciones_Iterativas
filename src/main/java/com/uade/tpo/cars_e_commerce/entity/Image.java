@@ -33,6 +33,7 @@ public class Image {
     @Lob
     private Blob image;
 
+    @Builder.Default
     private Date date = new Date();
 
     @OneToOne
