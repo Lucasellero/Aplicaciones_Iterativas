@@ -308,7 +308,7 @@ public CarritoDTO updateProductQuantity(Long cartId, Long productId, Long quanti
         Carrito carrito = carritoRepository.findById(cartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Carrito not found with id: " + cartId));
 
-        // Mapea los datos al CarritoDTO
+
         return CarritoDTO.builder()
                 .carritoId(carrito.getCarritoId())
                 .items(carrito.getItems().stream()
@@ -320,7 +320,7 @@ public CarritoDTO updateProductQuantity(Long cartId, Long productId, Long quanti
 
     
     
-    // Método para mapear CarritoItem a CarritoItemDTO
+
     @Override
     public CarritoItemDTO mapToCarritoItemDTO(CarritoItem item) {
         return CarritoItemDTO.builder()

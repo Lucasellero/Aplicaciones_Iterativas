@@ -1,0 +1,128 @@
+.cart {
+    padding: 20px;
+    background-color: #f9f9f9; 
+    border-radius: 8px;
+    margin: 20px;
+}
+
+.cart h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #7a4449; 
+    margin-bottom: 20px;
+}
+
+.cart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.cart-card {
+    background-color: #3c2d3f; 
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s;
+    color: white; 
+    height: 100%; 
+}
+
+.cart-card:hover {
+    transform: scale(1.05);
+}
+
+.cart-card img {
+    width: 100%;
+    border-radius: 4px;
+}
+
+.cart-card h3 {
+    font-size: 1.5rem;
+    margin: 10px 0;
+    color: #f0f0f0; 
+}
+
+.cart-card p {
+    font-size: 1.2rem;
+    color: #fff; 
+}
+
+.remove-button {
+    background-color: #633B48; 
+    color: white; 
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s; 
+    margin-top: 10px;
+}
+
+.remove-button:hover {
+    background-color: #7A4449; 
+}
+
+.total {
+    text-align: right;
+    font-size: 1.5rem;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #333; 
+}
+
+.cart p {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.add-to-cart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.add-to-cart input {
+    padding: 8px;
+    width: 50px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.add-to-cart button {
+    background-color: #633B48;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.add-to-cart button:hover {
+    background-color: #7A4449;
+}
+
+@media (max-width: 768px) {
+    .cart-grid {
+        grid-template-columns: 1fr; 
+    }
+
+    .add-to-cart {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .add-to-cart input {
+        width: 80px;
+        margin-bottom: 10px;
+    }
+}

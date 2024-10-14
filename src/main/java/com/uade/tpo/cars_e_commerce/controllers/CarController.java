@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,14 +21,14 @@ import com.uade.tpo.cars_e_commerce.exceptions.CarDuplicateException;
 import com.uade.tpo.cars_e_commerce.exceptions.CarNotFoundException;
 import com.uade.tpo.cars_e_commerce.service.CarService;  
 
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("car")
-public class CarsController {
+public class CarController {
 
     @Autowired
     private CarService carService;
-
+    
     @PostMapping("/create")
     public ResponseEntity<Object> createCar(@RequestBody CarRequest carRequest) {
         try {
@@ -72,7 +73,7 @@ public class CarsController {
 
     //-----------------------------------FILTROS------------------------------------------------------------
 
-    @GetMapping("/manufacturer")
+    @GetMapping("manufacturer")
     public ResponseEntity<List<Car>> getCarByManufacturer(@RequestParam String manufacturer) throws CarNotFoundException {
         List<Car> result = carService.getCarByManufacturer(manufacturer);
         if (result.isEmpty())
@@ -114,6 +115,7 @@ public class CarsController {
         return ResponseEntity.ok(result);
     }
 
+    
     //-----------------------------------MODIFICACIONES------------------------------------------------------------
     
     @PutMapping("/update/manufacturer")

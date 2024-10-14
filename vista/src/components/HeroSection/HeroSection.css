@@ -1,0 +1,43 @@
+.hero {
+    width: 100%;
+    height: auto; 
+    min-height: 50vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../../assets/images/banner2.jpg');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    margin: 0;
+    padding: 10px 10px 0px 10px;
+    border: 8px solid rgba(0, 0, 0, 0.8); 
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); 
+    animation: fadeIn 1s ease-in-out; 
+    box-sizing: border-box;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.hero-text {
+    z-index: 1; 
+    margin: 0; 
+    padding: 20px; 
+    background-color: rgba(0, 0, 0, 0.5); 
+    border-radius: 10px; 
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); 
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-text h1 {
+    font-size: 3rem; 
+    margin: 10px 0; 
+}

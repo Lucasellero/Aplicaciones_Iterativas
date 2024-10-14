@@ -41,5 +41,5 @@ public interface CarService {
     Car updateModelName(Long carId, String modelName) throws CarNotFoundException;
 
     Car updateDiscount(Long carId, Double discount) throws CarNotFoundException;
-
+    
 }

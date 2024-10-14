@@ -16,9 +16,9 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     @Query (value = "DELETE FROM Car c WHERE c.id = :carId")
     List<Car> deleteCarById(@Param("carId") Long carId);
 
-    @Query(value = "select c from Car c where c.manufacturer = :manufacturer")
+    @Query(value = "select c from Car c where LOWER(c.manufacturer) LIKE LOWER(CONCAT('%', :manufacturer, '%'))")
     List<Car> findByManufacturer(@Param("manufacturer") String manufacturer);
-
+    
     @Query(value = "select c from Car c where c.price = :price")
     List<Car> findByPrice(@Param("price") Double price);
 
@@ -30,6 +30,19 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     @Query(value = "select c from Car c where c.modelYear = :modelYear")
     List<Car> findByModelYear(@Param("modelYear") Integer modelYear);    
+
+    @Query("SELECT c FROM Car c WHERE " +
+           "(:manufacturer IS NULL OR c.manufacturer = :manufacturer) AND " +
+           "(:model_name IS NULL OR c.modelName = :model_name) AND " +
+           "(:color IS NULL OR c.color = :color) AND " +
+           "(:model_year IS NULL OR c.modelYear = :model_year) AND " +
+           "(:price IS NULL OR c.price = :price)")
+    List<Car> findByFilters(@Param("manufacturer") String manufacturer,
+                             @Param("model_name") String model_name,
+                             @Param("color") String color,
+                             @Param("model_year") Integer model_year,
+                             @Param("price") Double price);
 }
+
 
 

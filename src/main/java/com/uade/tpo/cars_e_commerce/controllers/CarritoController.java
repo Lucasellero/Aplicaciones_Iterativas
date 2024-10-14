@@ -1,8 +1,8 @@
 package com.uade.tpo.cars_e_commerce.controllers;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -12,15 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.cars_e_commerce.entity.Carrito;
 import com.uade.tpo.cars_e_commerce.entity.dto.CarritoDTO;
-import com.uade.tpo.cars_e_commerce.entity.dto.CarritoItemDTO;
 import com.uade.tpo.cars_e_commerce.exceptions.ResourceNotFoundException;
-import com.uade.tpo.cars_e_commerce.service.CarritoService;
+ import com.uade.tpo.cars_e_commerce.service.CarritoService;
 
 import lombok.RequiredArgsConstructor;
 
-
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("carrito")
 public class CarritoController {
 

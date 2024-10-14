@@ -50,7 +50,7 @@ public class AuthenticationService {
                 if (!request.getRole().equals("ADMIN")) {
                 var cart = Carrito.builder()
                         .user(usernuevo)
-                        .carritoId(usernuevo.getId())  // El ID del carrito será igual al ID del usuario
+                        .carritoId(usernuevo.getId())  
                         .total(0.0)
                         .build();
                         CarritoRepository.save(cart);

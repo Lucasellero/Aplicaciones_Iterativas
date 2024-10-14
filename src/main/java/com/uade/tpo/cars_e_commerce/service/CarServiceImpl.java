@@ -28,7 +28,7 @@ public class CarServiceImpl implements CarService {
     public Optional<Car> getCarById(Long carId) {
         return carRepository.findById(carId);
     }
-
+    
 
     @Override
     public Car createCar(CarRequest carRequest) throws CarDuplicateException {
